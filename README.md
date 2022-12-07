@@ -1,1 +1,1 @@
-# financeapp-android
+# Finance App Android
