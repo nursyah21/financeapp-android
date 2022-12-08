@@ -3,6 +3,7 @@ package com.nursyah.finance.ui.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -21,7 +22,10 @@ fun LoginScreen(
      verticalArrangement = Arrangement.Center,
      horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      TextButton(onClick = signIn) {
+      TextButton(
+        onClick = signIn,
+        border = ButtonDefaults.outlinedBorder
+      ) {
         Text(text = "Continue with google")
       }
     }

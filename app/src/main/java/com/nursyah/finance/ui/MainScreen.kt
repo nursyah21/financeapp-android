@@ -2,6 +2,7 @@ package com.nursyah.finance.ui
 
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -16,6 +17,7 @@ import com.nursyah.finance.ui.theme.FinanceTheme
 
 val mainViewModel = MainViewModel()
 
+@ExperimentalMaterialApi
 @Composable
 fun FinanceApp(){
   FinanceTheme {
@@ -31,12 +33,15 @@ fun FinanceApp(){
     }
 
     if(currentUser.value == "null") LoginScreen(
-      signIn = { launcher.launch(mainViewModel.signInIntent) }
+      signIn = {
+        launcher.launch(mainViewModel.signInIntent)
+      }
     )
     else MainScreen()
   }
 }
 
+@ExperimentalMaterialApi
 @Composable
 fun MainScreen(){
   val context = LocalContext.current

@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Finance</string>
+    <string name="about">
+        Finance \n\n
+        an open-source finance app android, with focus simplicity and data sync
+    </string>
+    <string name="share_app">
+        Manage your finance with Finance <!--TODO add link playstore-->
+    </string>
+    <string name="ko_fi">
+        https://ko-fi.com/nursyahjaya
+    </string>
+    <string name="trakteer">
+        https://trakteer.id/nursyah-jaya
+    </string>
 </resources>

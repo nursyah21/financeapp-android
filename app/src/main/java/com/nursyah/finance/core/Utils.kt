@@ -2,6 +2,8 @@ package com.nursyah.finance.core
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
 import com.nursyah.finance.core.Utils.Companion.SHARED_PREFERENCES
@@ -14,6 +16,20 @@ class Utils {
 
     val enterAnimated =  fadeIn()
     val exitAnimated = ExitTransition.None
+
+    fun openLink(app: Context, url: String){
+      val intent = Intent(Intent.ACTION_VIEW,Uri.parse(url))
+      app.startActivity(intent)
+    }
+
+    fun shareText(app: Context, text: String){
+      val intent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, text)
+        type = "plain/text"
+      }
+      app.startActivity(Intent.createChooser(intent, null))
+    }
   }
 }
 

@@ -9,8 +9,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 
-//val Green800 = Color(0xff003d1f)
 val BlueGray = Color(0xff000a12)
+val AlmostBlack = Color(0xff1F272D)
 
 val ColorPalette = darkColors(
   primary = Color.White,

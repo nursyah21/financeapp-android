@@ -24,7 +24,7 @@ enum class ItemNav(
 
 class MainViewModel: ViewModel() {
   val currentUser:MutableState<String> = mutableStateOf("")
-  val selectedNavItem:MutableState<String> = mutableStateOf("home")
+  val selectedNavItem:MutableState<String> = mutableStateOf("account")
 
   val signInIntent = AuthUI.getInstance()
     .createSignInIntentBuilder().setAvailableProviders(
@@ -40,6 +40,7 @@ class MainViewModel: ViewModel() {
       currentUser.value = FirebaseAuth.getInstance().currentUser?.email.toString()
       user.setUser(currentUser.value)
       Log.d("TAG","success")
+
     }else{
       Log.d("TAG", "failed $resp")
     }
