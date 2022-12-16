@@ -1,4 +1,4 @@
-package com.nursyah.finance.ui.components
+package com.nursyah.finance.core
 
 import android.app.Activity
 import android.content.Context
@@ -6,12 +6,11 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.nursyah.finance.core.User
 
 
-class FirebaseDatabaseViewModel(app: Context): ViewModel(){
+class FirebaseDatabase(app: Context): ViewModel(){
   private val db = Firebase.firestore
-  private val userEmail = User(app as Activity).getUser()
+  private val userEmail = User(app).getUser()
   private val source = Source.CACHE
 
   fun test(){

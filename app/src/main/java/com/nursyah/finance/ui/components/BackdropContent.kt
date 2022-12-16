@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -23,7 +24,7 @@ import com.nursyah.finance.ui.theme.AlmostBlack
 import kotlinx.coroutines.launch
 
 @Composable
-fun SpendingContent(
+fun BackdropContent(
   onClose: () -> Unit,
   updateOnClick: () -> Unit,
   states: String = ""
@@ -69,19 +70,22 @@ fun Content(
   ) {
     Column(modifier = Modifier.padding(10.dp)) {
       Text(
-        text = newItem.ifEmpty { "item" },
+        text = newItem.ifEmpty { "Description" },
         fontSize = MaterialTheme.typography.h6.fontSize,
-        maxLines = 1
+        maxLines = 1,
+        color = if(newItem.isEmpty()) Color(0x44ffffff) else Color.White
       )
       Spacer(modifier = Modifier. height(5.dp))
       Text(
         text = value,
-        fontSize = MaterialTheme.typography.h6.fontSize
+        maxLines = 1,
+        fontSize = MaterialTheme.typography.h6.fontSize,
+        color = if(newValue.isEmpty()) Color(0x44ffffff) else Color.White
       )
     }
   }
 
-  SpendingField(
+  Field(
     value = newValue,
     onValueChange = {if(it.length <= 10) newValue = it},
     item = newItem,
@@ -93,7 +97,7 @@ fun Content(
 }
 
 @Composable
-fun SpendingField(
+fun Field(
   value: String,
   onValueChange: (String) -> Unit,
   item: String,
@@ -105,7 +109,7 @@ fun SpendingField(
 
   TextField(
     value = item,
-    label = { Text("item") },
+    label = { Text("description") },
     onValueChange = {
       scope.launch {
         onItemChange(it)
@@ -176,11 +180,11 @@ fun SendToFireBase(
       border = ButtonDefaults.outlinedBorder,
       modifier = Modifier.fillMaxWidth()
     ) {
-      Text(text = "update")
+      Text(text = "Enter")
     }
   }
 }
 
 fun showToast(context: Context){
-  Toast.makeText(context, "item and value can't be empty", Toast.LENGTH_SHORT).show()
+  Toast.makeText(context, "description and value can't be empty", Toast.LENGTH_SHORT).show()
 }

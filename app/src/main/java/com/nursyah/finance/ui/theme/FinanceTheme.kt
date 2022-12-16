@@ -2,12 +2,16 @@ package com.nursyah.finance.ui.theme
 
 import android.app.Activity
 import android.os.Build
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.dp
+
+val paddingDimens = PaddingValues(horizontal = 10.dp, vertical = 15.dp)
 
 val BlueGray = Color(0xff000a12)
 val AlmostBlack = Color(0xff1F272D)

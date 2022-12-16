@@ -24,7 +24,7 @@ enum class ItemNav(
 
 class MainViewModel: ViewModel() {
   val currentUser:MutableState<String> = mutableStateOf("")
-  val selectedNavItem:MutableState<String> = mutableStateOf("account")
+  val selectedNavItem:MutableState<String> = mutableStateOf("home")
 
   val signInIntent = AuthUI.getInstance()
     .createSignInIntentBuilder().setAvailableProviders(

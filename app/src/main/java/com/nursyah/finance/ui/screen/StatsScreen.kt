@@ -19,8 +19,8 @@ fun StatsScreen(
   AnimatedVisibility(
     visible = enabled,
     modifier = Modifier.padding(padding),
-    enter = Utils.enterAnimated,
-    exit = Utils.exitAnimated
+    enter = Utils.enterAnimatedFade,
+    exit = Utils.exitAnimatedFade
   ) {
     Surface(
       modifier = Modifier.fillMaxSize()

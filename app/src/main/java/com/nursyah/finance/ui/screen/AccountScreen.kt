@@ -31,8 +31,8 @@ fun AccountScreen(
   AnimatedVisibility(
     visible = enabled,
     modifier = Modifier.padding(padding),
-    enter = Utils.enterAnimated,
-    exit = Utils.exitAnimated
+    enter = Utils.enterAnimatedFade,
+    exit = Utils.exitAnimatedFade
   ) {
     Surface(
       modifier = Modifier.fillMaxSize()
@@ -44,7 +44,7 @@ fun AccountScreen(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.padding(5.dp)
       ) {
-        var userEmail = email.dropLast(10)
+        var userEmail = Utils.getUserEmail(email)
         userEmail = if(userEmail.length < 20) userEmail else userEmail.dropLast(3).plus("...")
         Text(
           text = "user: $userEmail",
