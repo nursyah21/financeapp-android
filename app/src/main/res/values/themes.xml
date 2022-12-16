@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="Theme.Finance" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/dark_gray</item>
         <item name="android:colorBackground">@color/dark_gray</item>
@@ -13,4 +12,9 @@
         <item name="android:navigationBarColor">@color/dark_gray</item>
     </style>
 
+    <style name="Theme.Finance.License" parent="@style/Theme.AppCompat.DayNight">
+        <item name="android:statusBarColor">@color/dark_gray</item>
+        <item name="android:colorBackground">@color/dark_gray</item>
+        <item name="android:navigationBarColor">@color/dark_gray</item>
+    </style>
 </resources>
