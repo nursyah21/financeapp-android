@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.finance'
+    namespace 'com.nursyah.finance'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.finance"
+        applicationId "com.nursyah.finance"
         minSdk 21
         targetSdk 33
         versionCode 1
@@ -67,6 +67,9 @@ dependencies {
 
     //livedata view-model
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+
+    //jetpack compose chart
+    implementation 'com.himanshoe:charty:1.1.3-alpha05'
 
     //android room
     implementation 'androidx.room:room-runtime:2.4.3'
