@@ -1,4 +1,4 @@
-package com.nursyah.finance.presentation.screens
+package com.nursyah.finance.presentation.screens.settings
 
 import android.annotation.SuppressLint
 import android.content.Context

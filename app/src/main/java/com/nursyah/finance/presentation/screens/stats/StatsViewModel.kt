@@ -1,4 +1,4 @@
-package com.nursyah.finance.presentation.screens
+package com.nursyah.finance.presentation.screens.stats
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,14 +9,14 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class StatsViewModel: ViewModel() {
-  var stateChart by mutableStateOf(Category.SPENDING)
+
+  var stateDataAlert by mutableStateOf(false)
     private set
-  fun changeStateChart(){
-    when(stateChart){
-      Category.INCOME -> stateChart = Category.SPENDING
-      Category.SPENDING -> stateChart = Category.INCOME
-    }
-  }
+  var stateDataStatus by mutableStateOf("")
+    private set
+  fun changeDataAlert(){ stateDataAlert = !stateDataAlert }
+  fun changeDataStatus(text: String){ stateDataStatus = text }
+
   object Category {
     const val INCOME = "Income"
     const val SPENDING = "Spending"
@@ -57,7 +57,4 @@ class StatsViewModel: ViewModel() {
     return res.reversed()
   }
 
-  fun minimizeValue(text:String):String{
-    return text
-  }
 }

@@ -9,9 +9,9 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.nursyah.finance.presentation.components.Navbar
-import com.nursyah.finance.presentation.screens.HomeScreen
-import com.nursyah.finance.presentation.screens.SettingsScreen
-import com.nursyah.finance.presentation.screens.StatsScreen
+import com.nursyah.finance.presentation.screens.home.HomeScreen
+import com.nursyah.finance.presentation.screens.settings.SettingsScreen
+import com.nursyah.finance.presentation.screens.stats.StatsScreen
 import com.nursyah.finance.presentation.theme.FinanceTheme
 import dagger.hilt.android.AndroidEntryPoint
 

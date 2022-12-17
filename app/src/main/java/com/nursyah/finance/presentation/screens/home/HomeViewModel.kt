@@ -1,4 +1,4 @@
-package com.nursyah.finance.presentation.screens
+package com.nursyah.finance.presentation.screens.home
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

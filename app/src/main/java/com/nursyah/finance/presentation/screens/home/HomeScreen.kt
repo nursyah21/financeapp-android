@@ -1,4 +1,4 @@
-package com.nursyah.finance.presentation.screens
+package com.nursyah.finance.presentation.screens.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -31,18 +31,19 @@ import com.nursyah.finance.presentation.theme.cardModifier
 import com.nursyah.finance.presentation.theme.modifierScreen
 import java.time.LocalDate
 
-val homeViewModel: HomeViewModel = HomeViewModel()
 
 @Composable
 fun HomeScreen(
   viewModel: MainViewModel = hiltViewModel(),
 ){
+  val homeViewModel = HomeViewModel()
+
   val data by viewModel.allData.collectAsState(initial = emptyList())
   homeViewModel.changeBalance(data)
 
   Surface {
     Column(modifierScreen) {
-      Summary(onClick = { homeViewModel.changeBackdropState() })
+      Summary(onClick = { homeViewModel.changeBackdropState() }, homeViewModel = homeViewModel)
       Spacer(modifier = Modifier.height(15.dp))
       TodaySummary()
       Spacer(modifier = Modifier.height(15.dp))
@@ -55,7 +56,7 @@ fun HomeScreen(
           text = Utils.getDateToday(Utils.TIME_TEXT_MONTH),
           modifier = Modifier.padding(horizontal = 5.dp))
       }
-      DataColumn(data)
+      DataColumn(data, homeViewModel = homeViewModel)
     }
 
     AlertComponent(
@@ -74,7 +75,8 @@ fun HomeScreen(
 
     BackdropContent(homeViewModel.backdropState) {
       SpendingIncomeBackdrop(
-        onClose = { homeViewModel.changeBackdropState() }
+        onClose = { homeViewModel.changeBackdropState() },
+        homeViewModel = homeViewModel
       )
     }
 
@@ -107,6 +109,7 @@ fun TodaySummary(
 fun SpendingIncomeBackdrop(
   onClose: () -> Unit,
   viewModel: MainViewModel = hiltViewModel(),
+  homeViewModel: HomeViewModel
 ){
   var value by remember { mutableStateOf("") }
   val state = if(homeViewModel.backdropStateValue == "Spend") "Spending" else "Income"
@@ -208,6 +211,7 @@ fun SpendingIncomeBackdrop(
 fun Summary(
   onClick: () -> Unit,
   viewModel: MainViewModel = hiltViewModel(),
+  homeViewModel: HomeViewModel
 ) {
   val data by viewModel.allData.collectAsState(initial = emptyList())
   val balance = Utils.convertText("${Utils.totalBalance(data)}")
@@ -254,6 +258,7 @@ fun Summary(
 @Composable
 fun DataColumn(
   data: List<Data>,
+  homeViewModel: HomeViewModel
 ){
 
   LazyColumn{

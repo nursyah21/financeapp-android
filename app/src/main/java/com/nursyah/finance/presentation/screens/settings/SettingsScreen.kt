@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalPermissionsApi::class)
 
-package com.nursyah.finance.presentation.screens
+package com.nursyah.finance.presentation.screens.settings
 
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
