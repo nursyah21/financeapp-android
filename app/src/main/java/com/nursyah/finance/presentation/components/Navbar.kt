@@ -5,31 +5,34 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.nursyah.finance.R
 
 
 enum class ItemNav(
-  val itemName: String,
-  val itemIcon: Int
+  val itemName: Int,
+  val itemIcon: Int,
 ){
-  HOME(itemName = "home", itemIcon = R.drawable.ic_dashboard),
-  STATS(itemName = "stats", itemIcon = R.drawable.ic_stats),
-  SETTINGS(itemName = "settings", itemIcon = R.drawable.ic_settings)
+  HOME(itemName = R.string.home, itemIcon = R.drawable.ic_dashboard),
+  STATS(itemName = R.string.stats, itemIcon = R.drawable.ic_stats),
+  SETTINGS(itemName = R.string.settings, itemIcon = R.drawable.ic_settings)
 }
+
 
 @Composable
 fun Navbar(
   onClick: (String) -> Unit,
   value: String,
 ){
+  val ctx = LocalContext.current
   BottomNavigation {
     ItemNav.values().forEach {
+      val itemName = ctx.getString(it.itemName)
       BottomNavigationItem(
-        selected = it.itemName == value,
-        onClick = { onClick(it.itemName) },
-        label = { Text(text = it.itemName)},
+        selected = itemName == value,
+        onClick = { onClick(itemName) },
+        label = { Text(text = itemName)},
         icon = { Icon(painter = painterResource(id = it.itemIcon), contentDescription = null)}
       )
     }

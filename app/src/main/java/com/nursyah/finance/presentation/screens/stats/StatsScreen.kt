@@ -12,11 +12,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.nursyah.finance.R
 import com.nursyah.finance.core.Utils
 import com.nursyah.finance.db.model.Data
 import com.nursyah.finance.presentation.components.AlertComponent
@@ -30,9 +32,10 @@ import com.nursyah.finance.presentation.theme.modifierScreen
 @Composable
 fun StatsScreen(
   mainViewModel: MainViewModel = hiltViewModel(),
+  viewModel: StatsViewModel = hiltViewModel(),
 ) {
-  val viewModel = StatsViewModel()
-  val data by mainViewModel.allData.collectAsState(emptyList())
+  val unsortedData by mainViewModel.allData.collectAsState(emptyList())
+  val data = viewModel.sortedData(unsortedData)
   val scrollState = rememberScrollState()
 
   val income = viewModel.accData(data, INCOME)
@@ -44,7 +47,7 @@ fun StatsScreen(
   ) {
     Chart(spending, income)
     Divider()
-    Text(text = "History")
+    Text(text = stringResource(R.string.history))
     DataColumn(data, viewModel)
   }
 }
@@ -58,7 +61,10 @@ private fun DataColumn(
   Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
     data.filterNot { it.category == "balanceSpending" || it.category == "balanceIncome" }
       .forEach {
-        val value = "${it.date}: ${Utils.convertText(it.value.toString())} (${it.category})"
+        val category =
+          if(it.category == "Spending") stringResource(R.string.spending)
+          else stringResource(R.string.income)
+        val value = "${Utils.convertDate(it.date)}: ${Utils.convertText(it.value.toString())} ($category)"
         
         Column(
           Modifier
@@ -82,12 +88,11 @@ private fun DataColumn(
         mainViewModel.deleteDataById(viewModel.stateDataId)
         viewModel.changeStateAlert()
       }) {
-        Text(text = "Yes", textDecoration = TextDecoration.Underline)
+        Text(text = stringResource(R.string.yes), textDecoration = TextDecoration.Underline)
       }
-    },
-    title = "Delete Data"
+    }
   ){
-    Text(text = "Are you sure to delete\n${viewModel.stateDataStatus}")
+    Text(text = "${stringResource(R.string.are_you_sure_to_delete)}\n${viewModel.stateDataStatus}")
   }
 }
 
@@ -99,12 +104,13 @@ private fun Chart(spending: List<Data>, income: List<Data>) {
   val heightSpend = if(spending.isEmpty()) 100.dp else 235.dp
   Card(
     cardModifier
-      .height(heightSpend).animateContentSize()
+      .height(heightSpend)
+      .animateContentSize()
       .zIndex(0f)
   ) {
     Column {
       Text(
-        text = "Spending",
+        text = stringResource(R.string.spending),
         fontSize = MaterialTheme.typography.h6.fontSize,
         modifier = Modifier.padding(8.dp)
       )
@@ -118,12 +124,13 @@ private fun Chart(spending: List<Data>, income: List<Data>) {
   //Income Chart
   Card(
     cardModifier
-      .height(heightIncome).animateContentSize()
+      .height(heightIncome)
+      .animateContentSize()
       .zIndex(0f)
   ) {
     Column {
       Text(
-        text = "Income",
+        text = stringResource(R.string.income),
         fontSize = MaterialTheme.typography.h6.fontSize,
         modifier = Modifier.padding(8.dp)
       )
@@ -174,7 +181,7 @@ private fun ChartData(
           color = Color.White.copy(alpha = .7f)
         )
         Text(
-          text = it.date,
+          text = Utils.convertDate(it.date),
           fontSize = 10.sp,
           color = Color.White.copy(alpha = .7f)
         )
@@ -197,7 +204,6 @@ private fun ChartData(
         modifier = Modifier.padding(5.dp)
       )
     }
-
   }
 
   LaunchedEffect(Unit){

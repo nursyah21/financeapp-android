@@ -3,7 +3,6 @@ package com.nursyah.finance
 import androidx.core.text.isDigitsOnly
 import com.nursyah.finance.core.Utils
 import com.nursyah.finance.db.model.Data
-import com.nursyah.finance.presentation.screens.stats.StatsViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.text.SimpleDateFormat
@@ -18,12 +17,10 @@ import java.util.*
 class UnitTest {
 
   @Test
-  fun testChart(){
-    val statsViewModel = StatsViewModel()
-    val data = statsViewModel.populateData()
-    println( statsViewModel.accData(data, "Spending"))
-    println( statsViewModel.accData(data, "Income"))
+  fun convertDate(){
+    println(Utils.convertDate("2022-12-10"))
   }
+
 
   @Test
   fun stringToInt(){

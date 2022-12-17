@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about">aplikasi sederhana untuk mengatur keuanganmu dengan tema gelap</string>
+    <string name="yes">ya</string>
+    <string name="are_you_sure_to_delete">Kamu yakin untuk menghapus</string>
+    <string name="today">Hari ini</string>
+    <string name="spending">Pengeluaran</string>
+    <string name="income">Pemasukan</string>
+    <string name="not_enough_money">Kamu tidak bisa mengeluarkan uang jika dana mu tidak cukup</string>
+    <string name="balance">dana</string>
+    <string name="Balance">Dana</string>
+    <string name="Spend">Pengeluaran</string>
+    <string name="Income">Pemasukan</string>
+    <string name="home">rumah</string>
+    <string name="stats">statistik</string>
+    <string name="settings">pengaturan</string>
+    <string name="version">versi</string>
+    <string name="backup_data">Simpan Data</string>
+    <string name="restore_data">Memulihkan Data</string>
+    <string name="delete_data">Hapus Data</string>
+    <string name="enable_storage_permission">Tolong izinkan akses penyimpanan</string>
+    <string name="confirm_backup_data">Seluruh data akan disimpan kedalam perangkat, kamu yakin</string>
+    <string name="confirm_restore_data">Data baru akan dimasukkan, kamu yakin</string>
+    <string name="confirm_delete_data">Seluruh data akan dihapus, kamu yakin</string>
+    <string name="contribute_in_github">Berkontribusi di github</string>
+    <string name="donate_with_kofi">Donasi melalui ko-fi</string>
+    <string name="donate_with_trakteer">Donasi melalui trakteer</string>
+    <string name="share_with_friend">Bagikan ke teman</string>
+    <string name="want_to_support">ingin mendukung</string>
+    <string name="failed_to_parse_data">Gagal untuk membuka data, cobalah untuk menghapus data</string>
+    <string name="history">Riwayat</string>
+    <string name="confirm">Konfirmasi</string>
+    <string name="backup_data_success">Berhasil Menyimpan Data</string>
+    <string name="backup_data_failed">Gagal Menyimpan Data</string>
+    <string name="allow_files_permission">Tolong izinkan akses untuk mengelola file</string>
+    <string name="restore_data_success">Sukses memulikan data</string>
+    <string name="restore_data_failed">Gagal memulihkan data</string>
+</resources>

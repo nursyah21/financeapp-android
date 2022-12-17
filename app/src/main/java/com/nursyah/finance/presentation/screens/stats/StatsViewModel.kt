@@ -1,14 +1,25 @@
 package com.nursyah.finance.presentation.screens.stats
 
+import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.nursyah.finance.R
+import com.nursyah.finance.core.Utils
 import com.nursyah.finance.db.model.Data
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
-class StatsViewModel: ViewModel() {
+@SuppressLint("StaticFieldLeak")
+@HiltViewModel
+class StatsViewModel @Inject constructor(
+  @ApplicationContext private val context: Context
+): ViewModel() {
 
   var stateDataAlert by mutableStateOf(false)
     private set
@@ -25,23 +36,15 @@ class StatsViewModel: ViewModel() {
     const val SPENDING = "Spending"
   }
 
-  fun populateData(): List<Data>{
-    val data = mutableListOf<Data>()
-    val date = (1..3).map { "%02d".format(it) }
-    val month = (1..4).map { "%02d".format(it) }
-    val year = (21..22).map { "20$it" }
-    val category = "Spending,Income".split(",")
-    val value = "10,15,22,13,20".split(",").map { "${it}000".toLong() }
-    repeat(100){
-      val time = "${date.random()}-${month.random()}-${year.random()}"
-      data.add(Data(date = time, category = category.random(), value = value.random()))
+  fun sortedData(data: List<Data>):List<Data>{
+    if(data.isEmpty())return emptyList()
+    try {
+      val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+       return data.sortedByDescending { LocalDate.parse(it.date, dateFormatter) }
+    }catch (_:Exception){ 
+      Utils.showToast(context, context.getString(R.string.failed_to_parse_data))
     }
-    return sortedData(data)
-  }
-
-  private fun sortedData(data: List<Data>):List<Data>{
-    val dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
-    return data.sortedByDescending { LocalDate.parse(it.date, dateFormatter) }
+    return emptyList()
   }
 
   fun accData(_data: List<Data>, category: String):List<Data> {

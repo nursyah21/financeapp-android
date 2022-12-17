@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import com.nursyah.finance.R
 import com.nursyah.finance.presentation.components.Navbar
 import com.nursyah.finance.presentation.screens.home.HomeScreen
 import com.nursyah.finance.presentation.screens.settings.SettingsScreen
@@ -31,15 +33,16 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun App() {
-  var navbarSelected by remember { mutableStateOf("home") }
+  val ctx = LocalContext.current
+  var navbarSelected by remember { mutableStateOf(ctx.getString(R.string.home)) }
   Scaffold(
     bottomBar = { Navbar(onClick = {navbarSelected = it}, value = navbarSelected)}
   ) {
     Column(modifier = Modifier.padding(it)) {
       when(navbarSelected){
-        "home" -> HomeScreen()
-        "stats" -> StatsScreen()
-        "settings" -> SettingsScreen()
+        ctx.getString(R.string.home) -> HomeScreen()
+        ctx.getString(R.string.stats) -> StatsScreen()
+        ctx.getString(R.string.settings) -> SettingsScreen()
       }
     }
   }

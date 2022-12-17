@@ -1,10 +1,44 @@
 <resources>
-    <string name="app_name">Finance</string>
-    <string name="title_activity_splash">SplashActivity</string>
-    <string name="database_name">database</string>
+    <string name="app_name" translatable="false">Finance</string>
+    <string name="title_activity_splash" translatable="false">SplashActivity</string>
+    <string name="database_name" translatable="false">database</string>
     <string name="about">a simple app to manage your finances with a dark theme</string>
-    <string name="github_url">https://github.com/nursyah21/financeapp-android</string>
-    <string name="kofi_url">https://ko-fi.com/nursyahjaya</string>
-    <string name="trakteer_url">https://trakteer.id/nursyah-jaya</string>
-    <string name="play_store">https://play.google.com</string>
+    <string name="github_url" translatable="false">https://github.com/nursyah21/financeapp-android</string>
+    <string name="kofi_url" translatable="false">https://ko-fi.com/nursyahjaya</string>
+    <string name="trakteer_url" translatable="false">https://trakteer.id/nursyah-jaya</string>
+    <string name="play_store" translatable="false">https://play.google.com</string>
+    <string name="yes">Yes</string>
+    <string name="are_you_sure_to_delete">Are you sure to delete</string>
+    <string name="today">Today</string>
+    <string name="spending">Spending</string>
+    <string name="income">Income</string>
+    <string name="not_enough_money">You can\'t spending if you didn\'t have enough balance</string>
+    <string name="balance">balance</string>
+    <string name="Balance">Balance</string>
+    <string name="Spend">Spend</string>
+    <string name="Income">Income</string>
+    <string name="home">home</string>
+    <string name="stats">stats</string>
+    <string name="settings">settings</string>
+    <string name="version">version</string>
+    <string name="backup_data">Backup Data</string>
+    <string name="restore_data">Restore Data</string>
+    <string name="delete_data">Delete Data</string>
+    <string name="enable_storage_permission">Please enable storage permission</string>
+    <string name="confirm_backup_data">All data will be backup to your devices, are you sure</string>
+    <string name="confirm_restore_data">New data will be added, are you sure</string>
+    <string name="confirm_delete_data">All data will be erased, are you sure</string>
+    <string name="contribute_in_github">Contribute in Github</string>
+    <string name="donate_with_kofi">Donate with ko-fi</string>
+    <string name="donate_with_trakteer">Donate with trakteer</string>
+    <string name="share_with_friend">Share with friend</string>
+    <string name="want_to_support">want to support</string>
+    <string name="failed_to_parse_data">Failed to parse data, please try to delete data</string>
+    <string name="history">History</string>
+    <string name="confirm">Confirm</string>
+    <string name="backup_data_success">Backup Data Success</string>
+    <string name="backup_data_failed">Backup Data Failed</string>
+    <string name="allow_files_permission">Please allow access to manages files permission</string>
+    <string name="restore_data_success">Restore Data Success</string>
+    <string name="restore_data_failed">Restore Data Failed</string>
 </resources>

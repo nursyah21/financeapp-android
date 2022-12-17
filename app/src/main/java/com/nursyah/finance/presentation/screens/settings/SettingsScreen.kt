@@ -21,12 +21,12 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.permissions.*
 import com.nursyah.finance.BuildConfig
 import com.nursyah.finance.R
-import com.nursyah.finance.presentation.components.MainViewModel
 import com.nursyah.finance.core.Utils
 import com.nursyah.finance.presentation.components.AlertComponent
-import com.google.accompanist.permissions.*
+import com.nursyah.finance.presentation.components.MainViewModel
 
 
 @Composable
@@ -53,7 +53,7 @@ fun SettingsScreen(
       verticalArrangement = Arrangement.Bottom,
     ) {
       Text(
-        "version ${BuildConfig.VERSION_NAME}",
+        "${stringResource(R.string.version)} ${BuildConfig.VERSION_NAME}",
         fontSize = 14.sp,
       )
       Text(
@@ -89,22 +89,22 @@ fun BackupRestoreData(
       TextButton(onClick = {
         settingsViewModel.backupAlert()
       }) {
-        Text(text = "Backup Data", textDecoration = TextDecoration.Underline)
+        Text(text = stringResource(R.string.backup_data), textDecoration = TextDecoration.Underline)
       }
       Spacer(modifier = Modifier.width(8.dp))
       TextButton(onClick = {
         settingsViewModel.restoreAlert()
       }) {
-        Text(text = "Restore Data", textDecoration = TextDecoration.Underline)
+        Text(text = stringResource(R.string.restore_data), textDecoration = TextDecoration.Underline)
       }
     }
     TextButton(onClick = {
       settingsViewModel.deleteAlert()
     }) {
-      Text(text = "Delete Data", textDecoration = TextDecoration.Underline)
+      Text(text = stringResource(R.string.delete_data), textDecoration = TextDecoration.Underline)
     }
   }
-  val context = LocalContext.current
+  val ctx = LocalContext.current
 
   AlertSettings(
     confirmButton = {
@@ -114,7 +114,7 @@ fun BackupRestoreData(
           else {
             permission.launchPermissionRequest()
             if(!permission.status.shouldShowRationale)
-              Utils.showToast(context, "Please enable storage permission")
+              Utils.showToast(ctx, ctx.getString(R.string.enable_storage_permission))
           }
         }
         "restore" -> {
@@ -122,7 +122,7 @@ fun BackupRestoreData(
           else {
             permission.launchPermissionRequest()
             if (!permission.status.isGranted)
-              Utils.showToast(context, "Please enable storage permission")
+              Utils.showToast(ctx, ctx.getString(R.string.enable_storage_permission))
           }
         }
         "delete" -> mainViewModel.deleteAllData()
@@ -139,18 +139,19 @@ fun AlertSettings(
   var title by remember { mutableStateOf("") }
   var text by remember { mutableStateOf("") }
 
+
   when(settingsViewModel.stateBackupRestore){
     "backup" -> {
-      title = "Backup Data"
-      text = "All data will be backup to your devices, are you sure"
+      title = stringResource(R.string.backup_data)
+      text = stringResource(R.string.confirm_backup_data)
     }
     "restore" -> {
-      title = "Restore Data"
-      text = "New data will be added, are you sure"
+      title = stringResource(R.string.restore_data)
+      text = stringResource(R.string.confirm_restore_data)
     }
     "delete" -> {
-      title = "Delete Data"
-      text = "All data will be erased, are you sure"
+      title = stringResource(R.string.delete_data)
+      text = stringResource(R.string.confirm_delete_data)
     }
   }
 
@@ -177,10 +178,10 @@ private fun Content(
 ) {
   val context = LocalContext.current
   val list = listOf(
-    arrayOf("Contribute in Github", context.getString(R.string.github_url)),
-    arrayOf("Donate with ko-fi", context.getString(R.string.kofi_url)),
-    arrayOf("Donate with trakteer", context.getString(R.string.trakteer_url)),
-    arrayOf("Share with friend", context.getString(R.string.play_store)),
+    arrayOf(stringResource(R.string.contribute_in_github), context.getString(R.string.github_url)),
+    arrayOf(stringResource(R.string.donate_with_kofi), context.getString(R.string.kofi_url)),
+    arrayOf(stringResource(R.string.donate_with_trakteer), context.getString(R.string.trakteer_url)),
+    arrayOf(stringResource(R.string.share_with_friend), context.getString(R.string.play_store)),
   )
   var supportCard by remember { mutableStateOf(false) }
   var modifierSupportCard = Modifier
@@ -195,14 +196,14 @@ private fun Content(
   ) {
     TextButton(onClick = { supportCard = !supportCard },
     ) {
-      Text(text = "want to support", textDecoration = TextDecoration.Underline)
+      Text(text = stringResource(R.string.want_to_support), textDecoration = TextDecoration.Underline)
     }
-
+    val ctx = LocalContext.current
     Card(modifier = modifierSupportCard.clickable { supportCard = !supportCard }) {
       LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
         items(list) {
           TextButton(onClick = {
-            if(it[0] == "Share with friend")mainViewModel.shareText(it[1])
+            if(it[0] == ctx.getString(R.string.share_with_friend))mainViewModel.shareText(it[1])
             else mainViewModel.openLink(it[1])
           }) {
             Text(text = it[0], textDecoration = TextDecoration.Underline)

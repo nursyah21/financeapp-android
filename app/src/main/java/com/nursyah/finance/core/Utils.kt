@@ -61,6 +61,12 @@ object Utils {
     } catch (_:Exception){ 0 }
   }
 
+  // convert date from 2022-12-10 to 10-12-2022
+  fun convertDate(date: String):String{
+    return date.split("-").reversed()
+      .joinToString(postfix = "", prefix = "", separator = "-")
+  }
+
   fun convertText(text: String):String {
     if(text == "") return "0"
     val prefix = if(text.contains("-")) "-" else ""
@@ -86,11 +92,8 @@ object Utils {
     val intent = Intent(context, MainActivity::class.java).apply {
       flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
-    val pendingIntent: PendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+    val pendingIntent: PendingIntent =
       PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-    } else {
-      PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-    }
 
 
     val builder = NotificationCompat.Builder(context, channelID)

@@ -11,10 +11,11 @@ import androidx.compose.runtime.*
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.nursyah.finance.R
 import com.nursyah.finance.core.Utils
 import com.nursyah.finance.db.model.Data
 import com.nursyah.finance.db.model.DataRepository
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -78,14 +79,14 @@ class SettingsViewModel @Inject constructor(
 
 
     try {
-      if(!write)return Utils.showToast(context, "Please allow access to files permission")
+      if(!write)return Utils.showToast(context, context.getString(R.string.allow_files_permission))
       val file = File(external, "finance_${Utils.getDateToday(Utils.TIME_WITH_HOUR)}.csv")
       file.setWritable(true)
       file.writeText(text)
-      Utils.showToast(context, "Backup Data Success")
-      Utils.notification(context, "Backup Data Success\n${file.path}")
+      Utils.showToast(context, context.getString(R.string.backup_data_success))
+      Utils.notification(context, "${context.getString(R.string.backup_data_success)}\n${file.path}")
     }catch (_:Exception){
-      Utils.showToast(context, "Backup Data Failed")
+      Utils.showToast(context, context.getString(R.string.backup_data_failed))
     }
   }
 
@@ -101,10 +102,10 @@ class SettingsViewModel @Inject constructor(
         }
       }
 
-      Utils.notification(context,"Restore Data Success")
-      Utils.showToast(context,"Restore Data Success")
+      Utils.notification(context,context.getString(R.string.restore_data_success))
+      Utils.showToast(context,context.getString(R.string.restore_data_success))
     }catch (_:Exception){
-      Utils.showToast(context,"RestoreData Failed")
+      Utils.showToast(context,context.getString(R.string.restore_data_failed))
     }
 
   }

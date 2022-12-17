@@ -13,8 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -68,9 +70,9 @@ fun HomeScreen(
             homeViewModel.changeAlertState()
           }
         ) {
-        Text(text = "Yes", textDecoration = TextDecoration.Underline)
+        Text(text = stringResource(R.string.yes), textDecoration = TextDecoration.Underline)
       }},
-      text = { Text(text = "Are you sure to delete\n${homeViewModel.alertStateDeleteString}") }
+      text = { Text(text = "${stringResource(R.string.are_you_sure_to_delete)}\n${homeViewModel.alertStateDeleteString}") }
     )
 
     BackdropContent(homeViewModel.backdropState) {
@@ -97,10 +99,10 @@ fun TodaySummary(
     val incomeTotal = Utils.totalDataString(totalData, "Income")
 
     Column(modifier = Modifier.padding(8.dp)) {
-      Text(text = "Today")
+      Text(text = stringResource(R.string.today))
       Spacer(modifier = Modifier.height(10.dp))
-      Text(text = "Spending: $spendingTotal")
-      Text(text = "Income: $incomeTotal")
+      Text(text = "${stringResource(R.string.spending)}: $spendingTotal")
+      Text(text = "${stringResource(R.string.income)}: $incomeTotal")
     }
   }
 }
@@ -120,13 +122,15 @@ fun SpendingIncomeBackdrop(
   val stopSpending =
     state == "Spending" && (homeViewModel.balance - Utils.convertToLong(value)) <= 0
 
+  val ctx = LocalContext.current
+  val textState = if(state == "Spending") ctx.getString(R.string.spending) else ctx.getString(R.string.income)
   Surface {
     Column {
       // header
       Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
       ) {
         TextButton(onClick = { }, enabled = false) {
-          Text(text = state, color = Color.White)
+          Text(text = textState, color = Color.White)
         }
 
         IconButton(
@@ -182,7 +186,7 @@ fun SpendingIncomeBackdrop(
         },
         modifier = Modifier.fillMaxWidth()
       ) {
-        Text(state)
+        Text(textState)
       }
       Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -191,11 +195,11 @@ fun SpendingIncomeBackdrop(
         Switch(
           checked = homeViewModel.balanceSwitch,
           onCheckedChange = { homeViewModel.changeBalanceSwitch(!it) })
-        Text(text = "balance")
+        Text(text = stringResource(R.string.balance))
       }
       if(stopSpending)
         Text(
-          text = "You can't spending if you didn't have enough balance",
+          text = stringResource(R.string.not_enough_money),
           fontSize = MaterialTheme.typography.subtitle2.fontSize,
           color = Color.White.copy(alpha = .7f),
           textAlign = TextAlign.Center,
@@ -222,7 +226,7 @@ fun Summary(
   ) {
     Column(modifier = Modifier.padding(8.dp)) {
       Text(
-        text = "Balance",
+        text = stringResource(R.string.Balance),
         fontSize = MaterialTheme.typography.h5.fontSize
       )
       Spacer(modifier = Modifier.height(10.dp))
@@ -238,7 +242,7 @@ fun Summary(
             homeViewModel.backdropSpend()
           }
         ) {
-          Text(text = "Spend")
+          Text(text = stringResource(R.string.Spend))
         }
         Spacer(modifier = Modifier.width(8.dp))
         OutlinedButton(
@@ -247,7 +251,7 @@ fun Summary(
             homeViewModel.backdropIncome()
           }
         ) {
-          Text(text = "Income")
+          Text(text = stringResource(R.string.Income))
         }
       }
     }
@@ -260,13 +264,16 @@ fun DataColumn(
   data: List<Data>,
   homeViewModel: HomeViewModel
 ){
-
+  val ctx = LocalContext.current
   LazyColumn{
     items(data
       .filterNot { it.category == "balanceSpending" || it.category == "balanceIncome" }
       .filter { it.date == LocalDate.now().toString()  }
     ){
-      val value = "${it.category}: ${Utils.convertText(it.value.toString())}"
+
+      val category = if(it.category == "Spending")
+        ctx.getString(R.string.spending) else ctx.getString(R.string.income)
+      val value = "$category: ${Utils.convertText(it.value.toString())}"
       Column(
         modifier = Modifier
           .padding(5.dp)
