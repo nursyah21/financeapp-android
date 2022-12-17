@@ -1,9 +1,9 @@
 package com.nursyah.finance
 
 import androidx.core.text.isDigitsOnly
-import com.example.finance.core.Utils
-import com.example.finance.db.model.Data
-import com.example.finance.presentation.screens.StatsViewModel
+import com.nursyah.finance.core.Utils
+import com.nursyah.finance.db.model.Data
+import com.nursyah.finance.presentation.screens.stats.StatsViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.text.SimpleDateFormat

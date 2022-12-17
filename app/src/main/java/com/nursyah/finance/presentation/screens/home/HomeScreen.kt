@@ -64,7 +64,7 @@ fun HomeScreen(
       onDismiss =  { homeViewModel.changeAlertState() },
       confirmButton = {
         TextButton(onClick = {
-            viewModel.deleteAllData(homeViewModel.alertStateDeleteId)
+            viewModel.deleteDataById(homeViewModel.alertStateDeleteId)
             homeViewModel.changeAlertState()
           }
         ) {

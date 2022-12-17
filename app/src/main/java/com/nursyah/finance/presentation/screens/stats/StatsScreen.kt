@@ -1,19 +1,26 @@
 package com.nursyah.finance.presentation.screens.stats
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.nursyah.finance.core.Utils
 import com.nursyah.finance.db.model.Data
 import com.nursyah.finance.presentation.components.AlertComponent
+import com.nursyah.finance.presentation.components.MainViewModel
 import com.nursyah.finance.presentation.screens.stats.StatsViewModel.Category.INCOME
 import com.nursyah.finance.presentation.screens.stats.StatsViewModel.Category.SPENDING
 import com.nursyah.finance.presentation.theme.cardModifier
@@ -21,9 +28,11 @@ import com.nursyah.finance.presentation.theme.modifierScreen
 
 
 @Composable
-fun StatsScreen() {
+fun StatsScreen(
+  mainViewModel: MainViewModel = hiltViewModel(),
+) {
   val viewModel = StatsViewModel()
-  val data by remember { mutableStateOf(viewModel.populateData()) }
+  val data by mainViewModel.allData.collectAsState(emptyList())
   val scrollState = rememberScrollState()
 
   val income = viewModel.accData(data, INCOME)
@@ -41,7 +50,11 @@ fun StatsScreen() {
 }
 
 @Composable
-private fun DataColumn(data: List<Data>, viewModel: StatsViewModel) {
+private fun DataColumn(
+  data: List<Data>,
+  viewModel: StatsViewModel,
+  mainViewModel: MainViewModel = hiltViewModel(),
+) {
   Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
     data.filterNot { it.category == "balanceSpending" || it.category == "balanceIncome" }
       .forEach {
@@ -51,8 +64,9 @@ private fun DataColumn(data: List<Data>, viewModel: StatsViewModel) {
           Modifier
             .fillMaxWidth()
             .clickable {
-              viewModel.changeDataAlert()
-              println(viewModel.stateDataAlert)
+              viewModel.changeStateAlert()
+              viewModel.changeDataStatus(value)
+              viewModel.changeDataId(it.id)
             }) {
           Text(text = value, color = Color.White.copy(alpha = .7f), fontSize = 14.sp)
         }
@@ -62,19 +76,30 @@ private fun DataColumn(data: List<Data>, viewModel: StatsViewModel) {
 
   AlertComponent(
     visible = viewModel.stateDataAlert,
-    onDismiss = { viewModel.changeDataAlert() },
-    confirmButton = { /*TODO*/ },
+    onDismiss = { viewModel.changeStateAlert() },
+    confirmButton = {
+      TextButton(onClick = {
+        mainViewModel.deleteDataById(viewModel.stateDataId)
+        viewModel.changeStateAlert()
+      }) {
+        Text(text = "Yes", textDecoration = TextDecoration.Underline)
+      }
+    },
     title = "Delete Data"
-  ){}
+  ){
+    Text(text = "Are you sure to delete\n${viewModel.stateDataStatus}")
+  }
 }
 
 
 @Composable
 private fun Chart(spending: List<Data>, income: List<Data>) {
   //Spending Chart
+  val heightIncome = if(income.isEmpty()) 100.dp else 235.dp
+  val heightSpend = if(spending.isEmpty()) 100.dp else 235.dp
   Card(
     cardModifier
-      .height(235.dp)
+      .height(heightSpend).animateContentSize()
       .zIndex(0f)
   ) {
     Column {
@@ -93,7 +118,7 @@ private fun Chart(spending: List<Data>, income: List<Data>) {
   //Income Chart
   Card(
     cardModifier
-      .height(235.dp)
+      .height(heightIncome).animateContentSize()
       .zIndex(0f)
   ) {
     Column {
@@ -115,11 +140,11 @@ private fun ChartData(
   data: List<Data>
 ) {
   val scrollState = rememberScrollState()
-  val maxData = data.maxBy { it.value }.value
-  val minData = data.minBy { it.value }.value
-  val avgData = data.reduce {
+  val maxData = if(data.isEmpty()) 0L else data.maxBy { it.value }.value
+  val minData = if(data.isEmpty()) 0L else data.minBy { it.value }.value
+  val avgData = if(data.isEmpty()) 0L else data.reduce {
       acc, d -> Data(date="", category = "", value = acc.value + d.value) }.value
-  val avgDataValue = (avgData.toFloat() / data.size).toInt().toString()
+  val avgDataValue = if(data.isEmpty()) "0" else (avgData.toFloat() / data.size).toInt().toString()
 
   Row(
     Modifier

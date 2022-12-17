@@ -68,9 +68,6 @@ dependencies {
     //livedata view-model
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
 
-    //jetpack compose chart
-    implementation 'com.himanshoe:charty:1.1.3-alpha05'
-
     //android room
     implementation 'androidx.room:room-runtime:2.4.3'
     implementation 'androidx.room:room-ktx:2.4.3'

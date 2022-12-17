@@ -37,7 +37,7 @@ class MainViewModel @Inject constructor(
   fun getDataToday(): Flow<List<Data>> =
     dataRepository.getDataByDate(now().toString())
 
-  fun deleteAllData(id: Long) = viewModelScope.launch(Dispatchers.IO) {
+  fun deleteDataById(id: Long) = viewModelScope.launch(Dispatchers.IO) {
     dataRepository.deleteById(id)
   }
 

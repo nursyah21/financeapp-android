@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun App() {
-  var navbarSelected by remember { mutableStateOf("stats") }
+  var navbarSelected by remember { mutableStateOf("home") }
   Scaffold(
     bottomBar = { Navbar(onClick = {navbarSelected = it}, value = navbarSelected)}
   ) {

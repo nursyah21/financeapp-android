@@ -14,8 +14,11 @@ class StatsViewModel: ViewModel() {
     private set
   var stateDataStatus by mutableStateOf("")
     private set
-  fun changeDataAlert(){ stateDataAlert = !stateDataAlert }
+  var stateDataId by mutableStateOf<Long>(0)
+    private set
+  fun changeStateAlert(){ stateDataAlert = !stateDataAlert }
   fun changeDataStatus(text: String){ stateDataStatus = text }
+  fun changeDataId(id: Long){stateDataId = id}
 
   object Category {
     const val INCOME = "Income"
