@@ -13,8 +13,16 @@ import androidx.core.text.isDigitsOnly
 import com.example.finance.R
 import com.example.finance.db.model.Data
 import com.example.finance.presentation.MainActivity
+import java.text.SimpleDateFormat
+import java.util.*
 
 object Utils {
+  const val TIME_WITH_HOUR = "ssmmHH_ddMMyyyy"
+  const val TIME_TEXT_MONTH = "dd-MMMM-yyyy"
+  @SuppressLint("SimpleDateFormat")
+  fun getDateToday(pattern: String): String {
+    return SimpleDateFormat(pattern).format(Calendar.getInstance().time)
+  }
 
   // category: Spending | Income
   fun totalData(data: List<Data>, category: String):Long {

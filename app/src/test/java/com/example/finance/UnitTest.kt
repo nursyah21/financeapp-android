@@ -3,12 +3,12 @@ package com.example.finance
 import androidx.core.text.isDigitsOnly
 import com.example.finance.core.Utils
 import com.example.finance.db.model.Data
+import com.example.finance.presentation.screens.StatsViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.util.Calendar
-import kotlin.reflect.typeOf
+import java.util.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -17,6 +17,13 @@ import kotlin.reflect.typeOf
  */
 class UnitTest {
 
+  @Test
+  fun testChart(){
+    val statsViewModel = StatsViewModel()
+    val data = statsViewModel.populateData()
+    println( statsViewModel.accData(data, "Spending"))
+    println( statsViewModel.accData(data, "Income"))
+  }
 
   @Test
   fun stringToInt(){

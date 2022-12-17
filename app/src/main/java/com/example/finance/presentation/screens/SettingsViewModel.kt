@@ -75,11 +75,10 @@ class SettingsViewModel @Inject constructor(
       context.startActivity(intent)
     }
 
-    val time = java.text.SimpleDateFormat("ssmmHH_ddMMyyyy")
-      .format(Calendar.getInstance().time)
+
     try {
       if(!write)return Utils.showToast(context, "Please allow access to files permission")
-      val file = File(external, "finance_$time.csv")
+      val file = File(external, "finance_${Utils.getDateToday(Utils.TIME_WITH_HOUR)}.csv")
       file.setWritable(true)
       file.writeText(text)
       Utils.showToast(context, "Backup Data Success")

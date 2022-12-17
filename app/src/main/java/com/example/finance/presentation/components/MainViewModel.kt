@@ -51,9 +51,9 @@ class MainViewModel @Inject constructor(
       action = Intent.ACTION_SEND
       putExtra(Intent.EXTRA_TEXT, text)
       type = "text/*"
-      addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     }
-    context.startActivity(Intent.createChooser(intent, null))
+    context.startActivity(
+      Intent.createChooser(intent, null).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
   }
 
   fun openLink(url: String){

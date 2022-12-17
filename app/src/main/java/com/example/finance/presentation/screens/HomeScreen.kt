@@ -1,6 +1,5 @@
 package com.example.finance.presentation.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,12 +30,10 @@ import com.example.finance.presentation.components.AlertComponent
 import com.example.finance.presentation.components.BackdropContent
 import com.example.finance.presentation.components.MainViewModel
 import com.example.finance.presentation.theme.AlmostBlack
-import java.text.SimpleDateFormat
-import java.util.*
-
+import java.time.LocalDate
 
 val homeViewModel: HomeViewModel = HomeViewModel()
-@SuppressLint("SimpleDateFormat")
+
 @Composable
 fun HomeScreen(
   viewModel: MainViewModel = hiltViewModel(),
@@ -58,15 +55,12 @@ fun HomeScreen(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End
       ) {
-        val calendar = Calendar.getInstance()
-        val date = SimpleDateFormat("dd-MMMM-yyyy").format(calendar.time)
         Text(
-          text = date,
+          text = Utils.getDateToday(Utils.TIME_TEXT_MONTH),
           modifier = Modifier.padding(horizontal = 5.dp))
       }
       DataColumn(data)
     }
-
 
     AlertComponent(
       visible = homeViewModel.alertState,
@@ -200,7 +194,7 @@ fun SpendingIncomeBackdrop(
       ) {
         Switch(
           checked = homeViewModel.balanceSwitch,
-          onCheckedChange = { homeViewModel.changeBalanceSwitch(it) })
+          onCheckedChange = { homeViewModel.changeBalanceSwitch(!it) })
         Text(text = "balance")
       }
       if(stopSpending)
@@ -270,8 +264,12 @@ fun Summary(
 fun DataColumn(
   data: List<Data>,
 ){
+
   LazyColumn{
-    items(data.filterNot { it.category == "balanceSpending" || it.category == "balanceIncome" }){
+    items(data
+      .filterNot { it.category == "balanceSpending" || it.category == "balanceIncome" }
+      .filter { it.date == LocalDate.now().toString()  }
+    ){
       val value = "${it.category}: ${Utils.convertText(it.value.toString())}"
       Column(
         modifier = Modifier

@@ -3,7 +3,6 @@
 package com.example.finance.presentation.screens
 
 import android.Manifest
-import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
@@ -21,13 +20,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.finance.BuildConfig
 import com.example.finance.R
 import com.example.finance.core.Utils
-import com.example.finance.presentation.MainActivity
 import com.example.finance.presentation.components.AlertComponent
 import com.example.finance.presentation.components.MainViewModel
 import com.google.accompanist.permissions.*
