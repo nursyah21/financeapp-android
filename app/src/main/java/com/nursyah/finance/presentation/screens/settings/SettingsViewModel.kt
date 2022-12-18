@@ -19,6 +19,7 @@ import com.nursyah.finance.core.Constants.TIME_WITH_HOUR
 import com.nursyah.finance.core.Utils
 import com.nursyah.finance.db.model.Data
 import com.nursyah.finance.db.model.DataRepository
+import com.nursyah.finance.presentation.components.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +42,9 @@ class SettingsViewModel @Inject constructor(
   fun changeAlertDialog() { alertDialog = !alertDialog }
   var stateBackupRestore by mutableStateOf("")
     private set
+  var statusBackupRestore by mutableStateOf("")
+    private set
+  private val mainViewModel = MainViewModel(dataRepository, context)
   fun deleteAlert(){
     stateBackupRestore = SETTINGS_STATE_DELETE
     changeAlertDialog()
@@ -52,6 +56,12 @@ class SettingsViewModel @Inject constructor(
   fun backupAlert(){
     stateBackupRestore = SETTINGS_STATE_BACKUP
     changeAlertDialog()
+  }
+  fun deleteData() {
+    mainViewModel.deleteAllData()
+    statusBackupRestore = context.getString(R.string.delete_data_success)
+    Utils.showToast(context, context.getString(R.string.delete_data_success))
+    Utils.notification(context, context.getString(R.string.delete_data_success))
   }
 
 
@@ -81,8 +91,9 @@ class SettingsViewModel @Inject constructor(
       val file = File(external, "finance_${Utils.getDateToday(TIME_WITH_HOUR)}.csv")
       file.setWritable(true)
       file.writeText(text)
-      Utils.showToast(context, context.getString(R.string.backup_data_success))
+      Utils.showToast(context, "${context.getString(R.string.backup_data_success)}\n${file.path}")
       Utils.notification(context, "${context.getString(R.string.backup_data_success)}\n${file.path}")
+      statusBackupRestore = "${context.getString(R.string.backup_data_success)}\n${file.path}"
     }catch (_:Exception){
       Utils.showToast(context, context.getString(R.string.backup_data_failed))
     }
@@ -103,6 +114,7 @@ class SettingsViewModel @Inject constructor(
 
       Utils.notification(context,context.getString(R.string.restore_data_success))
       Utils.showToast(context,context.getString(R.string.restore_data_success))
+      statusBackupRestore = context.getString(R.string.restore_data_success)
     }catch (_:Exception){
       Utils.showToast(context,context.getString(R.string.restore_data_failed))
     }

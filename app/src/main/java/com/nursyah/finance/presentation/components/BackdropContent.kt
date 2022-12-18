@@ -1,5 +1,6 @@
 package com.nursyah.finance.presentation.components
 
+import android.content.res.Resources
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -21,6 +22,8 @@ fun BackdropContent(
   visible: Boolean,
   content: @Composable () -> Unit,
 ){
+  val height = if(Resources.getSystem().displayMetrics.heightPixels > 1280) 160.dp else 95.dp
+
   AnimatedVisibility(
     visible = visible,
     enter = slideInVertically(initialOffsetY = {it}),
@@ -36,7 +39,7 @@ fun BackdropContent(
           }
         }
       },
-      peekHeight = 180.dp,
+      peekHeight = height,
       backLayerBackgroundColor = Color.Transparent,
       gesturesEnabled = false
     )

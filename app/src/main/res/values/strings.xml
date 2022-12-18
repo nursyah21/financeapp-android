@@ -44,4 +44,5 @@
     <string name="license">license</string>
     <string name="open_source_license">OpenSource License</string>
     <string name="data_not_valid">Data not valid</string>
+    <string name="delete_data_success">Delete data success</string>
 </resources>

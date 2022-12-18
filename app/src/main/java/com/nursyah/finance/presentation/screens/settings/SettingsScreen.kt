@@ -7,9 +7,11 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -80,7 +82,6 @@ fun SettingsScreen(
 @Composable
 fun BackupRestoreData(
   settingsViewModel: SettingsViewModel = hiltViewModel(),
-  mainViewModel: MainViewModel = hiltViewModel(),
 ) {
   val ctx = LocalContext.current
   val launcher = rememberLauncherForActivityResult(
@@ -127,6 +128,14 @@ fun BackupRestoreData(
     }) {
       Text(text = stringResource(R.string.delete_data), textDecoration = TextDecoration.Underline)
     }
+    val scrollState = rememberScrollState()
+    //status delete,backup, and restore
+    Row(Modifier.padding(5.dp).horizontalScroll(scrollState)){
+      Text(
+        text = settingsViewModel.statusBackupRestore,
+        color = Color.White.copy(alpha = .7f)
+      )
+    }
   }
 
 
@@ -135,7 +144,7 @@ fun BackupRestoreData(
       when(settingsViewModel.stateBackupRestore){
         "backup" -> { settingsViewModel.backupData() }
         "restore" -> { launcher.launch("text/*") }
-        "delete" -> mainViewModel.deleteAllData()
+        "delete" -> { settingsViewModel.deleteData() }
       }
     }
   )
