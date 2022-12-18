@@ -21,9 +21,13 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.*
 import com.nursyah.finance.BuildConfig
 import com.nursyah.finance.R
+import com.nursyah.finance.core.Constants
+import com.nursyah.finance.core.Constants.SETTINGS_STATE_BACKUP
+import com.nursyah.finance.core.Constants.SETTINGS_STATE_RESTORE
 import com.nursyah.finance.core.Utils
 import com.nursyah.finance.presentation.components.AlertComponent
 import com.nursyah.finance.presentation.components.MainViewModel
@@ -31,11 +35,12 @@ import com.nursyah.finance.presentation.components.MainViewModel
 
 @Composable
 fun SettingsScreen(
-  settingsViewModel: SettingsViewModel = hiltViewModel(),
+  navHostController: NavHostController
 ){
   Surface(
     modifier = Modifier.fillMaxSize()
   ) {
+
     Column(modifier = Modifier.padding(horizontal = 8.dp)){
       Text("Finance", fontSize = MaterialTheme.typography.h6.fontSize)
       Divider()
@@ -56,14 +61,17 @@ fun SettingsScreen(
         "${stringResource(R.string.version)} ${BuildConfig.VERSION_NAME}",
         fontSize = 14.sp,
       )
+      val ctx = LocalContext.current
       Text(
         text = "OpenSource Libraries",
         textDecoration = TextDecoration.Underline,
         fontSize = 14.sp,
         color = Color.White.copy(alpha = .6f),
-        modifier = Modifier.clickable { settingsViewModel.activityOpenSource() }
+        modifier = Modifier.clickable {
+          navHostController.popBackStack()
+          navHostController.navigate(ctx.getString(Constants.SCREEN_LICENSE))
+        }
       )
-
     }
   }
 
@@ -74,28 +82,44 @@ fun BackupRestoreData(
   settingsViewModel: SettingsViewModel = hiltViewModel(),
   mainViewModel: MainViewModel = hiltViewModel(),
 ) {
-  val permission = rememberPermissionState(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
+  val ctx = LocalContext.current
   val launcher = rememberLauncherForActivityResult(
     contract = ActivityResultContracts.GetContent(),
     onResult = {
-      if(it != null)
-        settingsViewModel.restoreData(it)
+      if(it != null) settingsViewModel.restoreData(it)
     }
   )
+
+  val permission = rememberPermissionState(Manifest.permission.WRITE_EXTERNAL_STORAGE){
+    if (!it) Utils.showToast(ctx, ctx.getString(R.string.enable_storage_permission))
+    else {
+      when (settingsViewModel.stateBackupRestore) {
+        SETTINGS_STATE_BACKUP -> settingsViewModel.backupData()
+        SETTINGS_STATE_RESTORE -> launcher.launch("text/*")
+      }
+    }
+  }
+
+  val colorPermission = if(permission.status.isGranted) Color.White else Color.White.copy(alpha = .6f)
 
   Column {
     Row {
       TextButton(onClick = {
         settingsViewModel.backupAlert()
       }) {
-        Text(text = stringResource(R.string.backup_data), textDecoration = TextDecoration.Underline)
+        Text(text = stringResource(R.string.backup_data),
+          textDecoration = TextDecoration.Underline,
+          color = colorPermission
+        )
       }
       Spacer(modifier = Modifier.width(8.dp))
       TextButton(onClick = {
         settingsViewModel.restoreAlert()
       }) {
-        Text(text = stringResource(R.string.restore_data), textDecoration = TextDecoration.Underline)
+        Text(text = stringResource(R.string.restore_data),
+          textDecoration = TextDecoration.Underline,
+          color = colorPermission
+        )
       }
     }
     TextButton(onClick = {
@@ -104,27 +128,13 @@ fun BackupRestoreData(
       Text(text = stringResource(R.string.delete_data), textDecoration = TextDecoration.Underline)
     }
   }
-  val ctx = LocalContext.current
+
 
   AlertSettings(
     confirmButton = {
       when(settingsViewModel.stateBackupRestore){
-        "backup" -> {
-          if(permission.status.isGranted) settingsViewModel.backupData()
-          else {
-            permission.launchPermissionRequest()
-            if(!permission.status.shouldShowRationale)
-              Utils.showToast(ctx, ctx.getString(R.string.enable_storage_permission))
-          }
-        }
-        "restore" -> {
-          if(permission.status.isGranted) launcher.launch("text/*")
-          else {
-            permission.launchPermissionRequest()
-            if (!permission.status.isGranted)
-              Utils.showToast(ctx, ctx.getString(R.string.enable_storage_permission))
-          }
-        }
+        "backup" -> { settingsViewModel.backupData() }
+        "restore" -> { launcher.launch("text/*") }
         "delete" -> mainViewModel.deleteAllData()
       }
     }

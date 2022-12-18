@@ -40,6 +40,7 @@ fun StatsScreen(
 
   val income = viewModel.accData(data, INCOME)
   val spending = viewModel.accData(data, SPENDING)
+  val errorData = viewModel.validData
 
   Column(
     modifierScreen.verticalScroll(scrollState),
@@ -48,6 +49,7 @@ fun StatsScreen(
     Chart(spending, income)
     Divider()
     Text(text = stringResource(R.string.history))
+    Text(text = errorData)
     DataColumn(data, viewModel)
   }
 }

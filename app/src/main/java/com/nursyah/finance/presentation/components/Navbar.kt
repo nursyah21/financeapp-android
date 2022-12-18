@@ -7,6 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavHostController
 import com.nursyah.finance.R
 
 
@@ -24,6 +25,7 @@ enum class ItemNav(
 fun Navbar(
   onClick: (String) -> Unit,
   value: String,
+  navController: NavHostController,
 ){
   val ctx = LocalContext.current
   BottomNavigation {
@@ -31,7 +33,13 @@ fun Navbar(
       val itemName = ctx.getString(it.itemName)
       BottomNavigationItem(
         selected = itemName == value,
-        onClick = { onClick(itemName) },
+        onClick = {
+          onClick(itemName)
+          if(navController.currentDestination?.route != itemName) {
+            navController.popBackStack()
+            navController.navigate(itemName)
+          }
+        },
         label = { Text(text = itemName)},
         icon = { Icon(painter = painterResource(id = it.itemIcon), contentDescription = null)}
       )

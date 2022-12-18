@@ -2,6 +2,7 @@ pluginManagement {
     repositories {
         google()
         mavenCentral()
+        mavenLocal()
         gradlePluginPortal()
     }
 }
@@ -10,7 +11,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {url "https://maven.pkg.jetbrains.space/public/p/compose/dev/"}
     }
 }
 rootProject.name = "Finance"
 include ':app'
+include ':benchmark'

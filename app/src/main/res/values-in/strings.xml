@@ -35,4 +35,7 @@
     <string name="allow_files_permission">Tolong izinkan akses untuk mengelola file</string>
     <string name="restore_data_success">Sukses memulikan data</string>
     <string name="restore_data_failed">Gagal memulihkan data</string>
+    <string name="license">lisensi</string>
+    <string name="open_source_license">Lisensi terbuka</string>
+    <string name="data_not_valid">Data tidak valid</string>
 </resources>

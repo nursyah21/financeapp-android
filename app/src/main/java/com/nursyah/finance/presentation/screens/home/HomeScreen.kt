@@ -18,11 +18,11 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nursyah.finance.R
+import com.nursyah.finance.core.Constants.TIME_TEXT_MONTH
 import com.nursyah.finance.core.Utils
 import com.nursyah.finance.db.model.Data
 import com.nursyah.finance.presentation.components.AlertComponent
@@ -55,7 +55,7 @@ fun HomeScreen(
         horizontalArrangement = Arrangement.End
       ) {
         Text(
-          text = Utils.getDateToday(Utils.TIME_TEXT_MONTH),
+          text = Utils.getDateToday(TIME_TEXT_MONTH),
           modifier = Modifier.padding(horizontal = 5.dp))
       }
       DataColumn(data, homeViewModel = homeViewModel)
@@ -202,7 +202,6 @@ fun SpendingIncomeBackdrop(
           text = stringResource(R.string.not_enough_money),
           fontSize = MaterialTheme.typography.subtitle2.fontSize,
           color = Color.White.copy(alpha = .7f),
-          textAlign = TextAlign.Center,
           modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 5.dp)

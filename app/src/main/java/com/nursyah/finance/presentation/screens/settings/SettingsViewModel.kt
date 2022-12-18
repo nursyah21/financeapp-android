@@ -11,8 +11,11 @@ import androidx.compose.runtime.*
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.nursyah.finance.R
+import com.nursyah.finance.core.Constants.SETTINGS_STATE_BACKUP
+import com.nursyah.finance.core.Constants.SETTINGS_STATE_DELETE
+import com.nursyah.finance.core.Constants.SETTINGS_STATE_RESTORE
+import com.nursyah.finance.core.Constants.TIME_WITH_HOUR
 import com.nursyah.finance.core.Utils
 import com.nursyah.finance.db.model.Data
 import com.nursyah.finance.db.model.DataRepository
@@ -32,30 +35,25 @@ class SettingsViewModel @Inject constructor(
   private val dataRepository: DataRepository,
   @ApplicationContext private val context: Context
 ): ViewModel() {
+
   var alertDialog by mutableStateOf(false)
     private set
   fun changeAlertDialog() { alertDialog = !alertDialog }
   var stateBackupRestore by mutableStateOf("")
     private set
   fun deleteAlert(){
-    stateBackupRestore = "delete"
+    stateBackupRestore = SETTINGS_STATE_DELETE
     changeAlertDialog()
   }
   fun restoreAlert(){
-    stateBackupRestore = "restore"
+    stateBackupRestore = SETTINGS_STATE_RESTORE
     changeAlertDialog()
   }
   fun backupAlert(){
-    stateBackupRestore = "backup"
+    stateBackupRestore = SETTINGS_STATE_BACKUP
     changeAlertDialog()
   }
 
-  fun activityOpenSource(){
-    val intent = Intent(context, OssLicensesMenuActivity::class.java).apply {
-      addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    }
-    context.startActivity(intent)
-  }
 
   fun backupData()= viewModelScope.launch{
     var text = "date,category,item,value\n"
@@ -80,7 +78,7 @@ class SettingsViewModel @Inject constructor(
 
     try {
       if(!write)return Utils.showToast(context, context.getString(R.string.allow_files_permission))
-      val file = File(external, "finance_${Utils.getDateToday(Utils.TIME_WITH_HOUR)}.csv")
+      val file = File(external, "finance_${Utils.getDateToday(TIME_WITH_HOUR)}.csv")
       file.setWritable(true)
       file.writeText(text)
       Utils.showToast(context, context.getString(R.string.backup_data_success))
@@ -92,6 +90,7 @@ class SettingsViewModel @Inject constructor(
 
   fun restoreData(path: Uri) {
     val data = getData(path)
+
     try {
       viewModelScope.launch(Dispatchers.IO) {
         data.forEach { c ->
@@ -122,11 +121,11 @@ class SettingsViewModel @Inject constructor(
       //check data valid
       val textList = text.split("\n")
       if(textList[0] != "date,category,item,value"){
-        Utils.showToast(context,"Data Not Valid")
+        Utils.showToast(context,context.getString(R.string.data_not_valid))
       }
       return textList.drop(1)
     }catch (e:Exception){
-      Utils.showToast(context,"Restore Data Failed")
+      Utils.showToast(context,context.getString(R.string.restore_data_failed))
       println("Error: ${e.stackTrace}")
     }
     return emptyList()

@@ -27,6 +27,8 @@ class StatsViewModel @Inject constructor(
     private set
   var stateDataId by mutableStateOf<Long>(0)
     private set
+  var validData by mutableStateOf("") //write reason why data error
+    private set
   fun changeStateAlert(){ stateDataAlert = !stateDataAlert }
   fun changeDataStatus(text: String){ stateDataStatus = text }
   fun changeDataId(id: Long){stateDataId = id}
@@ -37,12 +39,14 @@ class StatsViewModel @Inject constructor(
   }
 
   fun sortedData(data: List<Data>):List<Data>{
+    //validData = ""
     if(data.isEmpty())return emptyList()
     try {
       val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
        return data.sortedByDescending { LocalDate.parse(it.date, dateFormatter) }
-    }catch (_:Exception){ 
+    }catch (e:Exception){
       Utils.showToast(context, context.getString(R.string.failed_to_parse_data))
+      validData = "Failed to parse data because:\n$e"
     }
     return emptyList()
   }

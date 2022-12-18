@@ -41,4 +41,7 @@
     <string name="allow_files_permission">Please allow access to manages files permission</string>
     <string name="restore_data_success">Restore Data Success</string>
     <string name="restore_data_failed">Restore Data Failed</string>
+    <string name="license">license</string>
+    <string name="open_source_license">OpenSource License</string>
+    <string name="data_not_valid">Data not valid</string>
 </resources>

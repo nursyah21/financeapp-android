@@ -3,47 +3,53 @@ package com.nursyah.finance.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.nursyah.finance.R
+import androidx.navigation.NavHostController
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.nursyah.finance.core.Constants.SCREEN_HOME
+import com.nursyah.finance.navigation.NavGraph
 import com.nursyah.finance.presentation.components.Navbar
-import com.nursyah.finance.presentation.screens.home.HomeScreen
-import com.nursyah.finance.presentation.screens.settings.SettingsScreen
-import com.nursyah.finance.presentation.screens.stats.StatsScreen
 import com.nursyah.finance.presentation.theme.FinanceTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+  private lateinit var navController: NavHostController
+  @OptIn(ExperimentalAnimationApi::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
     setContent {
+      navController = rememberAnimatedNavController()
       FinanceTheme {
-        App()
+        App(navController)
       }
     }
   }
-
 }
 
 @Composable
-fun App() {
+fun App(navController: NavHostController) {
   val ctx = LocalContext.current
-  var navbarSelected by remember { mutableStateOf(ctx.getString(R.string.home)) }
+  var navbarSelected by remember { mutableStateOf(ctx.getString(SCREEN_HOME)) }
+
   Scaffold(
-    bottomBar = { Navbar(onClick = {navbarSelected = it}, value = navbarSelected)}
+    bottomBar = {
+      Navbar(
+        onClick = {navbarSelected = it},
+        value = navbarSelected,
+        navController = navController,
+      )
+    }
   ) {
     Column(modifier = Modifier.padding(it)) {
-      when(navbarSelected){
-        ctx.getString(R.string.home) -> HomeScreen()
-        ctx.getString(R.string.stats) -> StatsScreen()
-        ctx.getString(R.string.settings) -> SettingsScreen()
-      }
+      NavGraph(navController = navController)
     }
   }
 }

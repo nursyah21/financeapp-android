@@ -17,8 +17,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object Utils {
-  const val TIME_WITH_HOUR = "ssmmHH_ddMMyyyy"
-  const val TIME_TEXT_MONTH = "dd-MMMM-yyyy"
   @SuppressLint("SimpleDateFormat")
   fun getDateToday(pattern: String): String {
     return SimpleDateFormat(pattern).format(Calendar.getInstance().time)
