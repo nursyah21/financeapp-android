@@ -129,6 +129,7 @@ fun SpendingIncomeBackdrop(
       // header
       Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
       ) {
+        //for label so we don't need clickable
         TextButton(onClick = { }, enabled = false) {
           Text(text = textState, color = Color.White)
         }
@@ -146,7 +147,7 @@ fun SpendingIncomeBackdrop(
       Text(
         text = Utils.convertText(value),
         fontSize = MaterialTheme.typography.h5.fontSize,
-        color = if(value == "" || stopSpending) Color.DarkGray else Color.White,
+        color = if(stopSpending || Utils.convertToLong(value) == 0L) Color.DarkGray else Color.White,
         modifier = Modifier.padding(top = 8.dp, bottom = 10.dp)
       )
 
@@ -161,7 +162,7 @@ fun SpendingIncomeBackdrop(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         keyboardActions = KeyboardActions(onDone = {
           focusManager.clearFocus()
-          if(value != "" && !stopSpending){
+          if(!stopSpending && Utils.convertToLong(value) != 0L){
             val category = if(homeViewModel.balanceSwitch) "balance$state" else state
             val data = Data(category = category, item = state, value = Utils.convertToLong(value))
             viewModel.addData(data)
@@ -177,7 +178,8 @@ fun SpendingIncomeBackdrop(
 
       OutlinedButton(
         onClick = {
-          if(value != "" && !stopSpending){
+          if(Utils.convertToLong(value) != 0L && !stopSpending){
+            //make data store in balance instead to spend or income
             val category = if(homeViewModel.balanceSwitch) "balance$state" else state
             val data = Data(category = category, item = state, value = Utils.convertToLong(value))
             viewModel.addData(data)

@@ -49,7 +49,7 @@ fun StatsScreen(
     Chart(spending, income)
     Divider()
     Text(text = stringResource(R.string.history))
-    Text(text = errorData)
+    if(errorData.isNotBlank())Text(text = errorData)
     DataColumn(data, viewModel)
   }
 }

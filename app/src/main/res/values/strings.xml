@@ -6,7 +6,7 @@
     <string name="github_url" translatable="false">https://github.com/nursyah21/financeapp-android</string>
     <string name="kofi_url" translatable="false">https://ko-fi.com/nursyahjaya</string>
     <string name="trakteer_url" translatable="false">https://trakteer.id/nursyah-jaya</string>
-    <string name="play_store" translatable="false">https://play.google.com</string>
+    <string name="play_store" translatable="false">https://play.google.com/store/apps/details?id=com.nursyah.finance</string>
     <string name="yes">Yes</string>
     <string name="are_you_sure_to_delete">Are you sure to delete</string>
     <string name="today">Today</string>
