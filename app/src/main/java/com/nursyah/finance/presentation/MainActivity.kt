@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
@@ -37,7 +38,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun App(navController: NavHostController) {
   val ctx = LocalContext.current
-  var navbarSelected by remember { mutableStateOf(ctx.getString(SCREEN_HOME)) }
+  var navbarSelected by rememberSaveable{ mutableStateOf(ctx.getString(SCREEN_HOME)) }
 
   Scaffold(
     bottomBar = {

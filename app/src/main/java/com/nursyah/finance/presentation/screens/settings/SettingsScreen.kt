@@ -37,12 +37,13 @@ import com.nursyah.finance.presentation.components.MainViewModel
 
 @Composable
 fun SettingsScreen(
-  navHostController: NavHostController
+  navHostController: NavHostController,
+  mainViewModel: MainViewModel = hiltViewModel(),
 ){
+
   Surface(
     modifier = Modifier.fillMaxSize()
   ) {
-
     Column(modifier = Modifier.padding(horizontal = 8.dp)){
       Text("Finance", fontSize = MaterialTheme.typography.h6.fontSize)
       Divider()
@@ -72,6 +73,15 @@ fun SettingsScreen(
         modifier = Modifier.clickable {
           navHostController.popBackStack()
           navHostController.navigate(ctx.getString(Constants.SCREEN_LICENSE))
+        }
+      )
+      Text(
+        text = "Privacy and Policy",
+        textDecoration = TextDecoration.Underline,
+        fontSize = 14.sp,
+        color = Color.White.copy(alpha = .6f),
+        modifier = Modifier.clickable {
+          mainViewModel.openLink(ctx.getString(R.string.privacy_policy))
         }
       )
     }
@@ -130,7 +140,10 @@ fun BackupRestoreData(
     }
     val scrollState = rememberScrollState()
     //status delete,backup, and restore
-    Row(Modifier.padding(5.dp).horizontalScroll(scrollState)){
+    Row(
+      Modifier
+        .padding(5.dp)
+        .horizontalScroll(scrollState)){
       Text(
         text = settingsViewModel.statusBackupRestore,
         color = Color.White.copy(alpha = .7f)

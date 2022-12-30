@@ -7,10 +7,9 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BackdropScaffold
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Surface
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -20,9 +19,18 @@ import com.nursyah.finance.presentation.theme.Dark
 @Composable
 fun BackdropContent(
   visible: Boolean,
+  onClose: () -> Unit,
   content: @Composable () -> Unit,
 ){
-  val height = if(Resources.getSystem().displayMetrics.heightPixels > 1280) 160.dp else 95.dp
+  //height to peek
+  val height =  if(Resources.getSystem().displayMetrics.heightPixels > 1280) 260.dp else 100.dp
+  val backdropScaffoldState = rememberBackdropScaffoldState(BackdropValue.Concealed)
+
+  LaunchedEffect(backdropScaffoldState.isRevealed){
+    if(backdropScaffoldState.isRevealed) {
+      onClose.invoke()
+    }
+  }
 
   AnimatedVisibility(
     visible = visible,
@@ -30,6 +38,7 @@ fun BackdropContent(
     exit = slideOutVertically(targetOffsetY = {it})
   ) {
     BackdropScaffold(
+      scaffoldState = backdropScaffoldState,
       appBar = {  },
       backLayerContent = { },
       frontLayerContent = {
@@ -41,7 +50,8 @@ fun BackdropContent(
       },
       peekHeight = height,
       backLayerBackgroundColor = Color.Transparent,
-      gesturesEnabled = false
+      stickyFrontLayer = false,
+      //gesturesEnabled = false
     )
   }
 }

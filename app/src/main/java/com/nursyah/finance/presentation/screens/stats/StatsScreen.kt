@@ -4,6 +4,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -11,7 +12,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -19,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nursyah.finance.R
+import com.nursyah.finance.core.Constants
 import com.nursyah.finance.core.Utils
 import com.nursyah.finance.db.model.Data
 import com.nursyah.finance.presentation.components.AlertComponent
@@ -27,6 +31,7 @@ import com.nursyah.finance.presentation.screens.stats.StatsViewModel.Category.IN
 import com.nursyah.finance.presentation.screens.stats.StatsViewModel.Category.SPENDING
 import com.nursyah.finance.presentation.theme.cardModifier
 import com.nursyah.finance.presentation.theme.modifierScreen
+import java.util.*
 
 
 @Composable
@@ -47,10 +52,54 @@ fun StatsScreen(
     verticalArrangement = Arrangement.spacedBy(15.dp)
   ) {
     Chart(spending, income)
+    Summary(data)
     Divider()
     Text(text = stringResource(R.string.history))
     if(errorData.isNotBlank())Text(text = errorData)
     DataColumn(data, viewModel)
+  }
+}
+
+@Composable
+private fun Summary(data: List<Data>) {
+  val calendar = Calendar.getInstance()
+  val thisYear = calendar[Calendar.YEAR]
+  val thisMonth = calendar[Calendar.MONTH]+1
+  val pattern = "%d-%02d-.*".format(thisYear, thisMonth).toRegex()
+  var spending = 0L //by remember { mutableStateOf(0L) }
+  var income = 0L //by rememer { mutableStateOf(0L) }
+
+  data.filter { pattern.matches(it.date) }.forEach {
+    if(it.category == "Spending")spending += it.value
+    if(it.category == "Income") income += it.value
+  }
+
+  val ctx = LocalContext.current
+  val text = Utils.getDateToday(Constants.TIME_TEXT_MONTH)
+    .split("-")
+    .subList(1,3)
+    .joinToString(prefix = "", separator = " ")
+
+  Text(
+    text = text,
+    modifier = Modifier.padding(horizontal = 5.dp)
+  )
+
+  Row(
+    horizontalArrangement = Arrangement.spacedBy(8.dp)
+  ) {
+    Card(Modifier.clip(RoundedCornerShape(10.dp))) {
+      Column(Modifier.padding(8.dp)) {
+        Text(text = ctx.getString(R.string.spending))
+        Text(Utils.convertText(spending.toString()))
+      }
+    }
+    Card(Modifier.clip(RoundedCornerShape(10.dp))) {
+      Column(Modifier.padding(8.dp)) {
+        Text(text = ctx.getString(R.string.income))
+        Text(Utils.convertText(income.toString()))
+      }
+    }
   }
 }
 
