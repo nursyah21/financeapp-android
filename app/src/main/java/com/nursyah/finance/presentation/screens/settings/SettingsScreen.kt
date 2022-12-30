@@ -1,8 +1,5 @@
-@file:OptIn(ExperimentalPermissionsApi::class)
-
 package com.nursyah.finance.presentation.screens.settings
 
-import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
@@ -24,13 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.google.accompanist.permissions.*
 import com.nursyah.finance.BuildConfig
 import com.nursyah.finance.R
 import com.nursyah.finance.core.Constants
-import com.nursyah.finance.core.Constants.SETTINGS_STATE_BACKUP
-import com.nursyah.finance.core.Constants.SETTINGS_STATE_RESTORE
-import com.nursyah.finance.core.Utils
 import com.nursyah.finance.presentation.components.AlertComponent
 import com.nursyah.finance.presentation.components.MainViewModel
 
@@ -93,7 +86,7 @@ fun SettingsScreen(
 fun BackupRestoreData(
   settingsViewModel: SettingsViewModel = hiltViewModel(),
 ) {
-  val ctx = LocalContext.current
+
   val launcher = rememberLauncherForActivityResult(
     contract = ActivityResultContracts.GetContent(),
     onResult = {
@@ -101,17 +94,6 @@ fun BackupRestoreData(
     }
   )
 
-  val permission = rememberPermissionState(Manifest.permission.WRITE_EXTERNAL_STORAGE){
-    if (!it) Utils.showToast(ctx, ctx.getString(R.string.enable_storage_permission))
-    else {
-      when (settingsViewModel.stateBackupRestore) {
-        SETTINGS_STATE_BACKUP -> settingsViewModel.backupData()
-        SETTINGS_STATE_RESTORE -> launcher.launch("text/*")
-      }
-    }
-  }
-
-  val colorPermission = if(permission.status.isGranted) Color.White else Color.White.copy(alpha = .6f)
 
   Column {
     Row {
@@ -120,7 +102,7 @@ fun BackupRestoreData(
       }) {
         Text(text = stringResource(R.string.backup_data),
           textDecoration = TextDecoration.Underline,
-          color = colorPermission
+          color = Color.White
         )
       }
       Spacer(modifier = Modifier.width(8.dp))
@@ -129,7 +111,7 @@ fun BackupRestoreData(
       }) {
         Text(text = stringResource(R.string.restore_data),
           textDecoration = TextDecoration.Underline,
-          color = colorPermission
+          color = Color.White
         )
       }
     }
