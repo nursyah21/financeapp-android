@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
@@ -13,6 +14,7 @@ import androidx.core.text.isDigitsOnly
 import com.nursyah.finance.R
 import com.nursyah.finance.db.model.Data
 import com.nursyah.finance.presentation.MainActivity
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -82,7 +84,7 @@ object Utils {
 
 
   @SuppressLint("UnspecifiedImmutableFlag")
-  fun notification(context:Context, description: String){
+  fun notification(context:Context, description: String, file: File? = null){
     val channelID = "notification"
     val title = "finance"
     val priority = NotificationCompat.PRIORITY_DEFAULT
@@ -90,9 +92,19 @@ object Utils {
     val intent = Intent(context, MainActivity::class.java).apply {
       flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
-    val pendingIntent: PendingIntent =
+    var pendingIntent: PendingIntent =
       PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
+    if(file != null){
+      val newIntent = Intent(Intent.ACTION_VIEW).apply {
+        setDataAndType(
+          Uri.parse(file.path),
+          "*/*")
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+      }
+      pendingIntent = PendingIntent
+        .getActivity(context, 0, newIntent, PendingIntent.FLAG_IMMUTABLE)
+    }
 
     val builder = NotificationCompat.Builder(context, channelID)
       .setSmallIcon(R.drawable.finance)

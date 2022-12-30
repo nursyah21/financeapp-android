@@ -1,7 +1,9 @@
 package com.nursyah.finance
 
 import androidx.core.text.isDigitsOnly
+import com.nursyah.finance.core.Constants.TIME_WITH_HOUR
 import com.nursyah.finance.core.Utils
+import com.nursyah.finance.core.Utils.getDateToday
 import com.nursyah.finance.db.model.Data
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -15,6 +17,11 @@ import java.util.*
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class UnitTest {
+
+  @Test
+  fun testNameFile(){
+    println(getDateToday(TIME_WITH_HOUR).replace("_"," at "))
+  }
 
   @Test
   fun convertDate(){

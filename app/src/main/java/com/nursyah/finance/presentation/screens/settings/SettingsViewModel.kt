@@ -1,12 +1,12 @@
 package com.nursyah.finance.presentation.screens.settings
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.provider.Settings
+import android.provider.MediaStore
 import androidx.compose.runtime.*
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
@@ -17,6 +17,7 @@ import com.nursyah.finance.core.Constants.SETTINGS_STATE_DELETE
 import com.nursyah.finance.core.Constants.SETTINGS_STATE_RESTORE
 import com.nursyah.finance.core.Constants.TIME_WITH_HOUR
 import com.nursyah.finance.core.Utils
+import com.nursyah.finance.core.Utils.getDateToday
 import com.nursyah.finance.db.model.Data
 import com.nursyah.finance.db.model.DataRepository
 import com.nursyah.finance.presentation.components.MainViewModel
@@ -74,28 +75,42 @@ class SettingsViewModel @Inject constructor(
       sendData(text)
     }
   }
+
   @SuppressLint("SimpleDateFormat")
   private fun sendData(text: String){
-    val external = Environment.getExternalStorageDirectory()
-    var write = true
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()) {
-      write = false
-      val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
-        .apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
-      context.startActivity(intent)
-    }
-
+    val external = Environment.getExternalStoragePublicDirectory(
+      Environment.DIRECTORY_DOCUMENTS
+    )
+    val nameFile = "backup finance ${getDateToday(TIME_WITH_HOUR)
+      .replace("_"," at ")}.csv"
+    val status = "${context.getString(R.string.backup_data_success)}\n${external.path}/$nameFile"
 
     try {
-      if(!write)return Utils.showToast(context, context.getString(R.string.allow_files_permission))
-      val file = File(external, "finance_${Utils.getDateToday(TIME_WITH_HOUR)}.csv")
-      file.setWritable(true)
-      file.writeText(text)
-      Utils.showToast(context, "${context.getString(R.string.backup_data_success)}\n${file.path}")
-      Utils.notification(context, "${context.getString(R.string.backup_data_success)}\n${file.path}")
-      statusBackupRestore = "${context.getString(R.string.backup_data_success)}\n${file.path}"
-    }catch (_:Exception){
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val backupData = ContentValues().apply {
+          put(MediaStore.MediaColumns.DISPLAY_NAME, nameFile)
+          put(MediaStore.MediaColumns.MIME_TYPE, "*/*")
+          put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS)
+        }
+        val uri = context.contentResolver.insert(
+          MediaStore.Files.getContentUri("external"),
+          backupData
+        )
+        with(context.contentResolver.openOutputStream(uri!!)) {
+          this?.write(text.toByteArray())
+        }
+      }
+      else{
+        val file = File(external, nameFile)
+        file.setWritable(true)
+        file.writeText(text)
+      }
+      Utils.showToast(context, status)
+      Utils.notification(context, status, file = external)
+      statusBackupRestore = status
+    }catch (e:Exception){
       Utils.showToast(context, context.getString(R.string.backup_data_failed))
+      println(e)
     }
   }
 

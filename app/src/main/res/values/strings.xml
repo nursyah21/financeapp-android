@@ -45,5 +45,5 @@
     <string name="open_source_license">OpenSource License</string>
     <string name="data_not_valid">Data not valid</string>
     <string name="delete_data_success">Delete data success</string>
-    <string name="privacy_policy" translatable="false">https://nursyah21.github.io/app/privacy_policy_financeapp</string>
+    <string name="privacy_policy" translatable="false">https://nursyah21.github.io/app/privacy_policy_finance</string>
 </resources>
