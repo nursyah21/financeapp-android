@@ -133,7 +133,6 @@ fun BackupRestoreData(
     }
   }
 
-
   AlertSettings(
     confirmButton = {
       when(settingsViewModel.stateBackupRestore){

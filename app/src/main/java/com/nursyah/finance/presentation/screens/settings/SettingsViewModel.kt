@@ -78,9 +78,11 @@ class SettingsViewModel @Inject constructor(
 
   @SuppressLint("SimpleDateFormat")
   private fun sendData(text: String){
+
     val external = Environment.getExternalStoragePublicDirectory(
       Environment.DIRECTORY_DOCUMENTS
     )
+
     val nameFile = "backup finance ${getDateToday(TIME_WITH_HOUR)
       .replace("_"," at ")}.csv"
     val status = "${context.getString(R.string.backup_data_success)}\n${external.path}/$nameFile"
@@ -92,10 +94,18 @@ class SettingsViewModel @Inject constructor(
           put(MediaStore.MediaColumns.MIME_TYPE, "*/*")
           put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS)
         }
-        val uri = context.contentResolver.insert(
-          MediaStore.Files.getContentUri("external"),
-          backupData
-        )
+
+        val uri = try{
+          context.contentResolver.insert(
+            MediaStore.Files.getContentUri("external"),
+            backupData
+          )
+        }catch (_:Exception){
+          context.contentResolver.insert(
+            MediaStore.Files.getContentUri("internal"),
+            backupData
+          )
+        }
         with(context.contentResolver.openOutputStream(uri!!)) {
           this?.write(text.toByteArray())
         }
