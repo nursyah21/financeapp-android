@@ -1,5 +1,8 @@
 package com.nursyah.finance.presentation.screens.settings
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
@@ -121,12 +124,20 @@ fun BackupRestoreData(
       Text(text = stringResource(R.string.delete_data), textDecoration = TextDecoration.Underline)
     }
     val scrollState = rememberScrollState()
+    val ctx = LocalContext.current
+    val modifierClickable = if(settingsViewModel.stateBackupRestore == Constants.SETTINGS_STATE_BACKUP){
+      Modifier.clickable {
+        openFolderCsv(settingsViewModel, ctx)
+      }
+    }else Modifier
     //status delete,backup, and restore
     Row(
       Modifier
         .padding(5.dp)
         .horizontalScroll(scrollState)){
+
       Text(
+        modifier = modifierClickable,
         text = settingsViewModel.statusBackupRestore,
         color = Color.White.copy(alpha = .7f)
       )
@@ -142,6 +153,21 @@ fun BackupRestoreData(
       }
     }
   )
+}
+
+
+private fun openFolderCsv(settingsViewModel: SettingsViewModel, ctx: Context) {
+  val file = settingsViewModel.filePath
+
+  //open new file
+  val newIntent = Intent(Intent.ACTION_VIEW).apply {
+    setDataAndType(
+      Uri.parse(file?.path),
+      "*/*"
+    )
+    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+  }
+  ctx.startActivity(newIntent)
 }
 
 @Composable

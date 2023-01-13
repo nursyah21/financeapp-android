@@ -46,4 +46,8 @@
     <string name="data_not_valid">Data not valid</string>
     <string name="delete_data_success">Delete data success</string>
     <string name="privacy_policy" translatable="false">https://nursyah21.github.io/app/privacy_policy_finance</string>
+    <string name="year">year</string>
+    <string name="month">month</string>
+    <string name="week">week</string>
+    <string name="all_time">all time</string>
 </resources>

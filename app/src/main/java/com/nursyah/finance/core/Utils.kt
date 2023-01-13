@@ -19,6 +19,21 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object Utils {
+  private const val SHARED_PREFERENCES = "sharedPreferences"
+  const val SHARED_CHART_INCOME = "chartIncome"
+  const val SHARED_CHART_SPENDING = "chartSpending"
+  fun saveSharedString(ctx: Context, value: String, name: String){
+   ctx.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE).edit()
+     .apply {
+       putString(name, value)
+     }.apply()
+  }
+
+  fun getSharedString(ctx: Context, name: String, default: String = ""):String {
+    return ctx.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE)
+      .getString(name, default) ?: ""
+  }
+
   @SuppressLint("SimpleDateFormat")
   fun getDateToday(pattern: String): String {
     return SimpleDateFormat(pattern).format(Calendar.getInstance().time)
@@ -79,7 +94,9 @@ object Utils {
       if(index % 3 == 0)res += ","
       res += c
     }
-    return prefix + res.reversed().dropLast(1)
+    res = prefix + res.reversed().dropLast(1)
+
+    return res
   }
 
 

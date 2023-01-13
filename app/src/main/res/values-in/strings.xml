@@ -39,4 +39,8 @@
     <string name="open_source_license">Lisensi terbuka</string>
     <string name="data_not_valid">Data tidak valid</string>
     <string name="delete_data_success">Data berhasi dihapus</string>
+    <string name="year">tahun</string>
+    <string name="month">bulan</string>
+    <string name="week">minggu</string>
+    <string name="all_time">sepanjang waktu</string>
 </resources>

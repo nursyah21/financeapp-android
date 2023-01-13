@@ -4,6 +4,8 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -17,18 +19,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.nursyah.finance.R
 import com.nursyah.finance.core.Constants
 import com.nursyah.finance.core.Utils
 import com.nursyah.finance.db.model.Data
 import com.nursyah.finance.presentation.components.AlertComponent
 import com.nursyah.finance.presentation.components.MainViewModel
+import com.nursyah.finance.presentation.screens.stats.StatsViewModel.Category.ALL_TIME
 import com.nursyah.finance.presentation.screens.stats.StatsViewModel.Category.INCOME
+import com.nursyah.finance.presentation.screens.stats.StatsViewModel.Category.MONTH
 import com.nursyah.finance.presentation.screens.stats.StatsViewModel.Category.SPENDING
+import com.nursyah.finance.presentation.screens.stats.StatsViewModel.Category.WEEK
+import com.nursyah.finance.presentation.screens.stats.StatsViewModel.Category.YEAR
+import com.nursyah.finance.presentation.screens.stats.StatsViewModel.Category.stateSummary
 import com.nursyah.finance.presentation.theme.cardModifier
 import com.nursyah.finance.presentation.theme.modifierScreen
 import java.util.*
@@ -38,6 +47,7 @@ import java.util.*
 fun StatsScreen(
   mainViewModel: MainViewModel = hiltViewModel(),
   viewModel: StatsViewModel = hiltViewModel(),
+  navHostController: NavHostController,
 ) {
   val unsortedData by mainViewModel.allData.collectAsState(emptyList())
   val data = viewModel.sortedData(unsortedData)
@@ -47,12 +57,14 @@ fun StatsScreen(
   val spending = viewModel.accData(data, SPENDING)
   val errorData = viewModel.validData
 
+
   Column(
     modifierScreen.verticalScroll(scrollState),
     verticalArrangement = Arrangement.spacedBy(15.dp)
   ) {
-    Chart(spending, income)
+    Chart(spending, income, viewModel, navHostController)
     Summary(data)
+
     Divider()
     Text(text = stringResource(R.string.history))
     if(errorData.isNotBlank())Text(text = errorData)
@@ -66,8 +78,8 @@ private fun Summary(data: List<Data>) {
   val thisYear = calendar[Calendar.YEAR]
   val thisMonth = calendar[Calendar.MONTH]+1
   val pattern = "%d-%02d-.*".format(thisYear, thisMonth).toRegex()
-  var spending = 0L //by remember { mutableStateOf(0L) }
-  var income = 0L //by rememer { mutableStateOf(0L) }
+  var spending = 0L
+  var income = 0L
 
   data.filter { pattern.matches(it.date) }.forEach {
     if(it.category == "Spending")spending += it.value
@@ -149,47 +161,112 @@ private fun DataColumn(
 
 
 @Composable
-private fun Chart(spending: List<Data>, income: List<Data>) {
+private fun Chart(spending: List<Data>, income: List<Data>, viewModel: StatsViewModel, navHostController: NavHostController) {
   //Spending Chart
   val heightIncome = if(income.isEmpty()) 100.dp else 235.dp
   val heightSpend = if(spending.isEmpty()) 100.dp else 235.dp
+
+  //Spending Chart
+  ChartContainer(heightSpend, viewModel, spending, SPENDING, navHostController)
+
+  //Income Chart
+  ChartContainer(heightIncome, viewModel, income, INCOME, navHostController)
+
+
+}
+
+@Composable
+private fun ChartContainer(
+  heightSpend: Dp, viewModel: StatsViewModel, data: List<Data>, s: String, navHostController: NavHostController
+) {
   Card(
     cardModifier
       .height(heightSpend)
       .animateContentSize()
       .zIndex(0f)
   ) {
+
     Column {
-      Text(
-        text = stringResource(R.string.spending),
-        fontSize = MaterialTheme.typography.h6.fontSize,
-        modifier = Modifier.padding(8.dp)
-      )
+      Row {
+        Text(
+          text = if(s == SPENDING) stringResource(R.string.spending) else stringResource(R.string.income),
+          fontSize = MaterialTheme.typography.h6.fontSize,
+          modifier = Modifier.padding(8.dp)
+        )
+        StateChart(s, viewModel, navHostController)
+      }
       Divider()
       Surface {
-        ChartData(spending)
+        ChartData(data)
       }
     }
   }
+}
 
-  //Income Chart
-  Card(
-    cardModifier
-      .height(heightIncome)
-      .animateContentSize()
-      .zIndex(0f)
+@Composable
+private fun StateChart(
+  s: String,
+  viewModel: StatsViewModel,
+  navHostController: NavHostController
+) {
+  val ctx = LocalContext.current
+
+  viewModel.chartSpending = Utils.getSharedString(ctx, Utils.SHARED_CHART_SPENDING, ALL_TIME)
+  viewModel.chartIncome = Utils.getSharedString(ctx, Utils.SHARED_CHART_INCOME, ALL_TIME)
+
+
+  LazyRow(
+    horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
-    Column {
-      Text(
-        text = stringResource(R.string.income),
-        fontSize = MaterialTheme.typography.h6.fontSize,
-        modifier = Modifier.padding(8.dp)
-      )
-      Divider()
-      Surface {
-        ChartData(income)
+    items(stateSummary) {
+      var text = ""
+      when (it) {
+        ALL_TIME -> {
+          text = stringResource(id = R.string.all_time)
+        }
+        YEAR -> {
+          text = stringResource(id = R.string.year)
+        }
+        MONTH -> {
+          text = stringResource(id = R.string.month)
+        }
+        WEEK -> {
+          text = stringResource(id = R.string.week)
+        }
+      }
+
+      //refresh
+      when(s){
+        SPENDING ->
+          ChartStateButton(text = text, active = (it == viewModel.chartSpending)) {
+            viewModel.chartSpending = it
+            Utils.saveSharedString(ctx, it, Utils.SHARED_CHART_SPENDING)
+            navHostController.popBackStack()
+            navHostController.navigate(ctx.getString(R.string.stats))
+          }
+        INCOME ->
+          ChartStateButton(text = text, active = (it == viewModel.chartIncome)) {
+            viewModel.chartIncome = it
+            Utils.saveSharedString(ctx, it, Utils.SHARED_CHART_INCOME)
+            navHostController.popBackStack()
+            navHostController.navigate(ctx.getString(R.string.stats))
+          }
       }
     }
+  }
+}
+
+@Composable
+fun ChartStateButton(
+  text: String,
+  active: Boolean,
+  onClick: () -> Unit
+) {
+  OutlinedButton(onClick = onClick) {
+    Text(
+      text = text,
+      textDecoration = if(active) TextDecoration.Underline else TextDecoration.None
+    )
   }
 }
 

@@ -76,6 +76,9 @@ class SettingsViewModel @Inject constructor(
     }
   }
 
+  var filePath: File? = null
+    private set
+
   @SuppressLint("SimpleDateFormat")
   private fun sendData(text: String){
 
@@ -95,6 +98,7 @@ class SettingsViewModel @Inject constructor(
           put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS)
         }
 
+        //try external directory if not found try use internal
         val uri = try{
           context.contentResolver.insert(
             MediaStore.Files.getContentUri("external"),
@@ -115,6 +119,7 @@ class SettingsViewModel @Inject constructor(
         file.setWritable(true)
         file.writeText(text)
       }
+      filePath = external
       Utils.showToast(context, status)
       Utils.notification(context, status, file = external)
       statusBackupRestore = status

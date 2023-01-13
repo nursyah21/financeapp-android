@@ -127,8 +127,10 @@ private fun KeyboardNumber(
 
     //get always positive value for prevValue
     val ctx = LocalContext.current
+    val prevValueMinus = homeViewModel.balanceValue.startsWith("-")
     val prevValue =
       Utils.convertToLong(homeViewModel.balanceValue.replace("-","").replace(",",""))
+
     val nowValue = Utils.convertToLong(value)
 
     OutlinedButton(
@@ -136,13 +138,20 @@ private fun KeyboardNumber(
         if(Utils.convertToLong(value) != 0L){
           var itemValue =  Utils.convertToLong(value)
           //make data store in balance instead to spend or income
+          //there's two scenario first when previous value negative , two previous value positive
           var category = textState
           if(textState == ctx.getString(R.string.Balance)) {
-            val state = if(nowValue > prevValue) "Spending" else "Income"
-
-            itemValue = if (nowValue > prevValue) prevValue - nowValue else prevValue + nowValue
+            //previous positive
+            var state = if(nowValue > prevValue) "Spending" else "Income"
+            itemValue = if (nowValue > prevValue) prevValue - nowValue else nowValue - prevValue
+            //previous negative
+            if(prevValueMinus){
+              state = "Income"
+              itemValue = prevValue + nowValue
+            }
             category = "balance$state"
           }
+          //println("$itemValue, $category")
 
           val data = Data(category = category, item = textState, value = itemValue)
           viewModel.addData(data)
@@ -168,6 +177,7 @@ private fun KeyboardNumber(
 
 @Composable
 private fun RowKeyboard(row: List<String>, onChange: (String) -> Unit, value: String) {
+
   Row(
     modifier = Modifier.fillMaxWidth(),
     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -176,8 +186,12 @@ private fun RowKeyboard(row: List<String>, onChange: (String) -> Unit, value: St
       OutlinedButton(
         modifier = Modifier.weight(1f),
         onClick = {
-          if (it == "del") onChange(value.dropLast(1)) else
-            if (value.length < 12) onChange(value + it)
+          when(it){
+            "del" -> onChange(value.dropLast(1))
+            "000" -> if(value.length < 12 && value.isNotEmpty()) onChange(value + it)
+            "0" -> if(value.isNotEmpty()) onChange(value + it)
+            else -> if(value.length < 12) onChange(value + it)
+          }
         }) {
         if (it == "del")
           Icon(painter = painterResource(R.drawable.ic_backspace), contentDescription = null)

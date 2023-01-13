@@ -188,7 +188,7 @@ fun DataColumn(
               homeViewModel.changeAlertStateDeleteString(value)
               homeViewModel.changeAlertStateDeleteId(it.id)
               homeViewModel.changeAlertState()
-              println("test")
+
             },
           verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
