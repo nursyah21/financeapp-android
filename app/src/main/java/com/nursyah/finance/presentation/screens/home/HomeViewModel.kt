@@ -12,6 +12,8 @@ class HomeViewModel: ViewModel(){
   var backdropState by mutableStateOf(false)
     private set
 
+  var balanceValue by mutableStateOf("")
+
   fun changeBackdropState(){
     backdropState = !backdropState
   }
@@ -20,6 +22,7 @@ class HomeViewModel: ViewModel(){
     private set
   fun backdropIncome()  { backdropStateValue = "Income" }
   fun backdropSpend()  { backdropStateValue = "Spend" }
+  fun backdropBalance()  { backdropStateValue = "Balance" }
 
   var alertState by mutableStateOf(false)
     private set

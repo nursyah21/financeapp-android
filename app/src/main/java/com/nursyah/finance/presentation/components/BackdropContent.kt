@@ -48,8 +48,8 @@ fun BackdropContent(
           }
         }
       },
-      peekHeight = height,
-      backLayerBackgroundColor = Color.Transparent,
+      //peekHeight = height,
+      backLayerBackgroundColor = Color.Black.copy(alpha = .6f),
       stickyFrontLayer = false,
       //gesturesEnabled = false
     )

@@ -1,10 +1,8 @@
 package com.nursyah.finance.presentation.screens.home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -14,7 +12,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nursyah.finance.R
 import com.nursyah.finance.core.Utils
-import com.nursyah.finance.db.model.Data
 import com.nursyah.finance.presentation.components.KeyboardNumber
 import com.nursyah.finance.presentation.components.MainViewModel
 
@@ -55,7 +52,7 @@ fun SpendingIncomeBackdrop(
         modifier = Modifier.padding(top = 8.dp, bottom = 10.dp)
       )
 
-      OutlinedButton(
+      /*OutlinedButton(
         onClick = {
           if(Utils.convertToLong(value) != 0L && !stopSpending){
             //make data store in balance instead to spend or income
@@ -77,7 +74,7 @@ fun SpendingIncomeBackdrop(
           checked = homeViewModel.balanceSwitch,
           onCheckedChange = { homeViewModel.changeBalanceSwitch(!it) })
         Text(text = stringResource(R.string.balance))
-      }
+      }*/
       if(stopSpending) {
         Text(
           text = stringResource(R.string.not_enough_money),
