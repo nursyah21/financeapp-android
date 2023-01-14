@@ -142,8 +142,8 @@ private fun KeyboardNumber(
           var category = textState
           if(textState == ctx.getString(R.string.Balance)) {
             //previous positive
-            var state = if(nowValue > prevValue) "Spending" else "Income"
-            itemValue = if (nowValue > prevValue) prevValue - nowValue else nowValue - prevValue
+            var state = if(nowValue > prevValue) "Income" else "Spending"
+            itemValue = if (nowValue > prevValue) nowValue - prevValue else prevValue - nowValue
             //previous negative
             if(prevValueMinus){
               state = "Income"

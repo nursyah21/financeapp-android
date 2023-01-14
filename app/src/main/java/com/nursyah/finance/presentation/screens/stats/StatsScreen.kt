@@ -26,7 +26,6 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.nursyah.finance.R
-import com.nursyah.finance.core.Constants
 import com.nursyah.finance.core.Utils
 import com.nursyah.finance.db.model.Data
 import com.nursyah.finance.presentation.components.AlertComponent
@@ -64,7 +63,6 @@ fun StatsScreen(
   ) {
     Chart(spending, income, viewModel, navHostController)
     Summary(data)
-
     Divider()
     Text(text = stringResource(R.string.history))
     if(errorData.isNotBlank())Text(text = errorData)
@@ -80,38 +78,76 @@ private fun Summary(data: List<Data>) {
   val pattern = "%d-%02d-.*".format(thisYear, thisMonth).toRegex()
   var spending = 0L
   var income = 0L
+  val ctx = LocalContext.current
 
-  data.filter { pattern.matches(it.date) }.forEach {
-    if(it.category == "Spending")spending += it.value
-    if(it.category == "Income") income += it.value
+  //filter based month and year
+  val setData = mutableSetOf<String>()
+  val listData = mutableListOf<SummaryData>()
+
+  data.reversed().forEach {
+    setData.add(it.date.dropLast(3))
   }
 
-  val ctx = LocalContext.current
-  val text = Utils.getDateToday(Constants.TIME_TEXT_MONTH)
-    .split("-")
-    .subList(1,3)
-    .joinToString(prefix = "", separator = " ")
+  try {
+    setData.forEach {
+      val text = Utils.convertDateString(ctx, it)
+      var accSpending = 0L
+      var accIncome = 0L
+      data.reversed().filter { itData -> itData.date.contains("$it-.*".toRegex()) }.forEach {itAcc->
+        println(itAcc.value)
+        if(itAcc.category == "Spending")accSpending += itAcc.value
+        if(itAcc.category == "Income") accIncome += itAcc.value
+      }
+      listData.add(
+        SummaryData(text, Utils.convertText(accIncome.toString()), Utils.convertText(accSpending.toString()))
+      )
+    }
+  }catch (e:Exception){
+    println("error: $e")
+  }
 
-  Text(
-    text = text,
-    modifier = Modifier.padding(horizontal = 5.dp)
-  )
-
+  val scrollState = rememberScrollState()
   Row(
+    Modifier
+      .padding(horizontal = 8.dp)
+      .horizontalScroll(scrollState),
     horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
-    Card(Modifier.clip(RoundedCornerShape(10.dp))) {
-      Column(Modifier.padding(8.dp)) {
-        Text(text = ctx.getString(R.string.spending))
-        Text(Utils.convertText(spending.toString()))
+    listData.forEach {
+      Card(Modifier.clip(RoundedCornerShape(10.dp))) {
+        Column(
+          Modifier
+            .padding(8.dp)
+            .width(180.dp)) {
+          Text(
+            text = it.text,
+            modifier = Modifier.padding(horizontal = 5.dp),
+          )
+          Divider(
+            Modifier
+              .width(180.dp)
+              .padding(vertical = 4.dp))
+          val scrollState = rememberScrollState()
+          Row(
+            Modifier.horizontalScroll(scrollState),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+          ) {
+            Column(Modifier.padding(8.dp)) {
+              Text(text = ctx.getString(R.string.spending))
+              Text(it.spending)
+            }
+            Column(Modifier.padding(8.dp)) {
+              Text(text = ctx.getString(R.string.income))
+              Text(it.income)
+            }
+          }
+        }
       }
     }
-    Card(Modifier.clip(RoundedCornerShape(10.dp))) {
-      Column(Modifier.padding(8.dp)) {
-        Text(text = ctx.getString(R.string.income))
-        Text(Utils.convertText(income.toString()))
-      }
-    }
+  }
+
+  LaunchedEffect(Unit){
+    scrollState.animateScrollTo(Int.MAX_VALUE, spring())
   }
 }
 
@@ -166,13 +202,33 @@ private fun Chart(spending: List<Data>, income: List<Data>, viewModel: StatsView
   val heightIncome = if(income.isEmpty()) 100.dp else 235.dp
   val heightSpend = if(spending.isEmpty()) 100.dp else 235.dp
 
+  val filterSpending = when(viewModel.chartSpending){
+    ALL_TIME -> spending
+    YEAR -> spending.filter { it.date.contains("${Utils.getThisYear()}-.*-.*".toRegex()) }
+    MONTH -> spending.filter { it.date.contains("${Utils.getThisYear()}-${Utils.getThisMonth()}-.*".toRegex()) }
+    WEEK -> {
+      val tempData = spending.filter { it.date.contains("${Utils.getThisYear()}-${Utils.getThisMonth()}-.*".toRegex()) }
+      tempData.subList(0, if(tempData.size >= 7) 7 else tempData.size)
+    }
+    else -> spending
+  }
+
+  val filterIncome = when(viewModel.chartIncome){
+    ALL_TIME -> income
+    YEAR -> income.filter { it.date.contains("${Utils.getThisYear()}-.*-.*".toRegex()) }
+    MONTH -> income.filter { it.date.contains("${Utils.getThisYear()}-${Utils.getThisMonth()}-.*".toRegex()) }
+    WEEK -> {
+      val tempData = income.filter { it.date.contains("${Utils.getThisYear()}-${Utils.getThisMonth()}-.*".toRegex()) }
+      tempData.subList(0, if(tempData.size >= 7) 7 else tempData.size)
+    }
+    else -> income
+  }
+
   //Spending Chart
-  ChartContainer(heightSpend, viewModel, spending, SPENDING, navHostController)
+  ChartContainer(heightSpend, viewModel, filterSpending, SPENDING, navHostController)
 
   //Income Chart
-  ChartContainer(heightIncome, viewModel, income, INCOME, navHostController)
-
-
+  ChartContainer(heightIncome, viewModel, filterIncome, INCOME, navHostController)
 }
 
 @Composable
@@ -195,6 +251,7 @@ private fun ChartContainer(
         )
         StateChart(s, viewModel, navHostController)
       }
+
       Divider()
       Surface {
         ChartData(data)
