@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
@@ -39,7 +40,6 @@ import com.nursyah.finance.presentation.screens.stats.StatsViewModel.Category.YE
 import com.nursyah.finance.presentation.screens.stats.StatsViewModel.Category.stateSummary
 import com.nursyah.finance.presentation.theme.cardModifier
 import com.nursyah.finance.presentation.theme.modifierScreen
-import java.util.*
 
 
 @Composable
@@ -72,12 +72,6 @@ fun StatsScreen(
 
 @Composable
 private fun Summary(data: List<Data>) {
-  val calendar = Calendar.getInstance()
-  val thisYear = calendar[Calendar.YEAR]
-  val thisMonth = calendar[Calendar.MONTH]+1
-  val pattern = "%d-%02d-.*".format(thisYear, thisMonth).toRegex()
-  var spending = 0L
-  var income = 0L
   val ctx = LocalContext.current
 
   //filter based month and year
@@ -127,9 +121,10 @@ private fun Summary(data: List<Data>) {
             Modifier
               .width(180.dp)
               .padding(vertical = 4.dp))
-          val scrollState = rememberScrollState()
+          //box
+          val scrollStateBox = rememberScrollState()
           Row(
-            Modifier.horizontalScroll(scrollState),
+            Modifier.horizontalScroll(scrollStateBox),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
           ) {
             Column(Modifier.padding(8.dp)) {
@@ -173,7 +168,17 @@ private fun DataColumn(
               viewModel.changeDataStatus(value)
               viewModel.changeDataId(it.id)
             }) {
-          Text(text = value, color = Color.White.copy(alpha = .7f), fontSize = 14.sp)
+          Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+          ) {
+            Text(text = value, color = Color.White.copy(alpha = .7f), fontSize = 14.sp)
+            Icon(
+              painter = painterResource(R.drawable.ic_delete),
+              contentDescription = null,
+              tint = Color.DarkGray
+            )
+          }
         }
         Divider()
     }

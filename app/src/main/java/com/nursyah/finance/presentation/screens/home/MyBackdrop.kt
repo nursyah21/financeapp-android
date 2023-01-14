@@ -3,6 +3,7 @@ package com.nursyah.finance.presentation.screens.home
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -10,13 +11,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nursyah.finance.R
 import com.nursyah.finance.core.Utils
 import com.nursyah.finance.db.model.Data
 import com.nursyah.finance.presentation.components.MainViewModel
+import kotlin.math.roundToInt
 
 @Composable
 fun MyBackdrop(
@@ -40,6 +44,7 @@ fun MyBackdrop(
   }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun Content(
   homeViewModel: HomeViewModel,
@@ -61,26 +66,27 @@ private fun Content(
     else -> ""
   }
 
-  //if(state == "Spending") ctx.getString(R.string.spending) else ctx.getString(R.string.income)
-
-  /*val swipeState = rememberSwipeableState(0)
-  val sizePx = with(LocalDensity.current){48.dp.toPx()}
-  val anchors = mapOf(0f to 0, sizePx to 1)*/
+  val swipeState = rememberSwipeableState(0)
+  val sizePx = with(LocalDensity.current){200.dp.toPx()}
+  val anchors = mapOf(0f to 0, sizePx to 10)
 
   /*TODO in new update create swipe function to close backdrop)*/
   Column(
     modifier= Modifier
       .fillMaxSize()
       .padding(8.dp)
-      /*.swipeable(
+      .swipeable(
         state = swipeState,
         anchors = anchors,
         thresholds = { _, _ -> FractionalThreshold(0f) },
         orientation = Orientation.Vertical
-      )*/,
+      ),
     verticalArrangement = Arrangement.Bottom
   ) {
-    Box {
+    Box(
+      Modifier
+        .offset { IntOffset(0, swipeState.offset.value.roundToInt()) }
+    ) {
       KeyboardNumber(
         value,
         textState,
@@ -89,6 +95,18 @@ private fun Content(
       ) { value = it }
     }
   }
+
+  LaunchedEffect(swipeState.offset.value.roundToInt()){
+    try{
+      if(swipeState.offset.value.roundToInt() >= 250) {
+        onClose.invoke()
+        swipeState.animateTo(0)
+      }else swipeState.animateTo(0)
+    }catch (e:Exception){
+      println(e)
+    }
+  }
+
 }
 
 
@@ -101,12 +119,14 @@ private fun KeyboardNumber(
   onClose: () -> Unit,
   onChange: (String) -> Unit,
 ){
-
+  val ctx = LocalContext.current
+  
   Column(
     modifier= Modifier.fillMaxSize(),
     verticalArrangement = Arrangement.Bottom
   ) {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+    Row(
+      modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
     ) {
       //for label so we don't need clickable
       TextButton(onClick = { }, enabled = false) {
@@ -121,12 +141,11 @@ private fun KeyboardNumber(
     Text(
       text = Utils.convertText(value),
       fontSize = MaterialTheme.typography.h5.fontSize,
-      color = if (Utils.convertToLong(value) == 0L) Color.DarkGray else Color.White,
+      color = if (Utils.convertToLong(value) == 0L && textState != ctx.getString(R.string.Balance)) Color.DarkGray else Color.White,
       modifier = Modifier.padding(top = 8.dp, bottom = 10.dp)
     )
 
     //get always positive value for prevValue
-    val ctx = LocalContext.current
     val prevValueMinus = homeViewModel.balanceValue.startsWith("-")
     val prevValue =
       Utils.convertToLong(homeViewModel.balanceValue.replace("-","").replace(",",""))
@@ -135,7 +154,7 @@ private fun KeyboardNumber(
 
     OutlinedButton(
       onClick = {
-        if(Utils.convertToLong(value) != 0L){
+        if(Utils.convertToLong(value) != 0L || textState == ctx.getString(R.string.Balance)){
           var itemValue =  Utils.convertToLong(value)
           //make data store in balance instead to spend or income
           //there's two scenario first when previous value negative , two previous value positive
@@ -151,7 +170,6 @@ private fun KeyboardNumber(
             }
             category = "balance$state"
           }
-          //println("$itemValue, $category")
 
           val data = Data(category = category, item = textState, value = itemValue)
           viewModel.addData(data)
@@ -177,7 +195,6 @@ private fun KeyboardNumber(
 
 @Composable
 private fun RowKeyboard(row: List<String>, onChange: (String) -> Unit, value: String) {
-
   Row(
     modifier = Modifier.fillMaxWidth(),
     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -189,7 +206,7 @@ private fun RowKeyboard(row: List<String>, onChange: (String) -> Unit, value: St
           when(it){
             "del" -> onChange(value.dropLast(1))
             "000" -> if(value.length < 12 && value.isNotEmpty()) onChange(value + it)
-            "0" -> if(value.isNotEmpty()) onChange(value + it)
+            "0" -> if(value.isEmpty()) onChange(value + it)
             else -> if(value.length < 12) onChange(value + it)
           }
         }) {

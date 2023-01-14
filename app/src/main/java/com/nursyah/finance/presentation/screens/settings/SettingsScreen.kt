@@ -36,7 +36,6 @@ fun SettingsScreen(
   navHostController: NavHostController,
   mainViewModel: MainViewModel = hiltViewModel(),
 ){
-
   Surface(
     modifier = Modifier.fillMaxSize()
   ) {

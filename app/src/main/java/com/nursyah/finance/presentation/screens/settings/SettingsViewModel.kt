@@ -91,33 +91,26 @@ class SettingsViewModel @Inject constructor(
     val status = "${context.getString(R.string.backup_data_success)}\n${external.path}/$nameFile"
 
     try {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        val backupData = ContentValues().apply {
-          put(MediaStore.MediaColumns.DISPLAY_NAME, nameFile)
-          put(MediaStore.MediaColumns.MIME_TYPE, "*/*")
+      val backupData = ContentValues().apply {
+        put(MediaStore.MediaColumns.DISPLAY_NAME, nameFile)
+        put(MediaStore.MediaColumns.MIME_TYPE, "*/*")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
           put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS)
         }
-
-        //try external directory if not found try use internal
-        val uri = try{
-          context.contentResolver.insert(
-            MediaStore.Files.getContentUri("external"),
-            backupData
-          )
-        }catch (_:Exception){
-          context.contentResolver.insert(
-            MediaStore.Files.getContentUri("internal"),
-            backupData
-          )
-        }
-        with(context.contentResolver.openOutputStream(uri!!)) {
-          this?.write(text.toByteArray())
-        }
       }
-      else{
-        val file = File(external, nameFile)
-        file.setWritable(true)
-        file.writeText(text)
+      val uri = try{
+        context.contentResolver.insert(
+          MediaStore.Files.getContentUri("external"),
+          backupData
+        )
+      }catch (_:Exception){
+        context.contentResolver.insert(
+          MediaStore.Files.getContentUri("internal"),
+          backupData
+        )
+      }
+      with(context.contentResolver.openOutputStream(uri!!)) {
+        this?.write(text.toByteArray())
       }
       filePath = external
       Utils.showToast(context, status)

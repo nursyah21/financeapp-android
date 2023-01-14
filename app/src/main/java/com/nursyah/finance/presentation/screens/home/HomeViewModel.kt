@@ -43,15 +43,9 @@ class HomeViewModel: ViewModel(){
     alertStateDeleteString = value
   }
 
-  var balance by mutableStateOf<Long>(0)
-    private set
+  private var balance by mutableStateOf<Long>(0)
   fun changeBalance(data: List<Data>) {
     balance = Utils.totalBalance(data)
   }
 
-  var balanceSwitch by mutableStateOf(false)
-    private set
-  fun changeBalanceSwitch(value: Boolean = balanceSwitch){
-    balanceSwitch = !value
-  }
 }

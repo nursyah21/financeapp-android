@@ -192,7 +192,13 @@ fun DataColumn(
             },
           verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-          Text(text = value)
+          Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+          ) {
+            Text(text = value)
+            Icon(painter = painterResource(R.drawable.ic_delete), contentDescription = null)
+          }
           Divider()
         }
       }
