@@ -21,6 +21,10 @@ class StatsViewModel @Inject constructor(
   @ApplicationContext private val context: Context
 ): ViewModel() {
 
+  var chartSpending by mutableStateOf("")
+  var chartIncome by  mutableStateOf("")
+
+
   var stateDataAlert by mutableStateOf(false)
     private set
   var stateDataStatus by mutableStateOf("")
@@ -36,6 +40,13 @@ class StatsViewModel @Inject constructor(
   object Category {
     const val INCOME = "Income"
     const val SPENDING = "Spending"
+    const val ALL_TIME = "ALL_TIME"
+    const val YEAR = "YEAR"
+    const val MONTH = "MONTH"
+    const val WEEK = "WEEK"
+    val stateSummary = listOf(
+      ALL_TIME, YEAR, MONTH, WEEK
+    )
   }
 
   fun sortedData(data: List<Data>):List<Data>{

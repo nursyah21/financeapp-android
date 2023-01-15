@@ -37,6 +37,7 @@ class SettingsViewModel @Inject constructor(
   private val dataRepository: DataRepository,
   @ApplicationContext private val context: Context
 ): ViewModel() {
+  var howToUse by mutableStateOf(false)
 
   var alertDialog by mutableStateOf(false)
     private set
@@ -76,35 +77,43 @@ class SettingsViewModel @Inject constructor(
     }
   }
 
+  var filePath: File? = null
+    private set
+
   @SuppressLint("SimpleDateFormat")
   private fun sendData(text: String){
+
     val external = Environment.getExternalStoragePublicDirectory(
       Environment.DIRECTORY_DOCUMENTS
     )
+
     val nameFile = "backup finance ${getDateToday(TIME_WITH_HOUR)
       .replace("_"," at ")}.csv"
     val status = "${context.getString(R.string.backup_data_success)}\n${external.path}/$nameFile"
 
     try {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        val backupData = ContentValues().apply {
-          put(MediaStore.MediaColumns.DISPLAY_NAME, nameFile)
-          put(MediaStore.MediaColumns.MIME_TYPE, "*/*")
+      val backupData = ContentValues().apply {
+        put(MediaStore.MediaColumns.DISPLAY_NAME, nameFile)
+        put(MediaStore.MediaColumns.MIME_TYPE, "*/*")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
           put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS)
         }
-        val uri = context.contentResolver.insert(
+      }
+      val uri = try{
+        context.contentResolver.insert(
           MediaStore.Files.getContentUri("external"),
           backupData
         )
-        with(context.contentResolver.openOutputStream(uri!!)) {
-          this?.write(text.toByteArray())
-        }
+      }catch (_:Exception){
+        context.contentResolver.insert(
+          MediaStore.Files.getContentUri("internal"),
+          backupData
+        )
       }
-      else{
-        val file = File(external, nameFile)
-        file.setWritable(true)
-        file.writeText(text)
+      with(context.contentResolver.openOutputStream(uri!!)) {
+        this?.write(text.toByteArray())
       }
+      filePath = external
       Utils.showToast(context, status)
       Utils.notification(context, status, file = external)
       statusBackupRestore = status

@@ -1,5 +1,8 @@
 package com.nursyah.finance.presentation.screens.settings
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
@@ -32,6 +35,7 @@ import com.nursyah.finance.presentation.components.MainViewModel
 fun SettingsScreen(
   navHostController: NavHostController,
   mainViewModel: MainViewModel = hiltViewModel(),
+  settingsViewModel: SettingsViewModel = hiltViewModel(),
 ){
 
   Surface(
@@ -78,6 +82,9 @@ fun SettingsScreen(
         }
       )
     }
+    HowToUse(visible = settingsViewModel.howToUse) {
+      settingsViewModel.howToUse = !settingsViewModel.howToUse
+    }
   }
 
 }
@@ -121,18 +128,25 @@ fun BackupRestoreData(
       Text(text = stringResource(R.string.delete_data), textDecoration = TextDecoration.Underline)
     }
     val scrollState = rememberScrollState()
+    val ctx = LocalContext.current
+    val modifierClickable = if(settingsViewModel.stateBackupRestore == Constants.SETTINGS_STATE_BACKUP){
+      Modifier.clickable {
+        openFolderCsv(settingsViewModel, ctx)
+      }
+    }else Modifier
     //status delete,backup, and restore
     Row(
       Modifier
         .padding(5.dp)
         .horizontalScroll(scrollState)){
+
       Text(
+        modifier = modifierClickable,
         text = settingsViewModel.statusBackupRestore,
         color = Color.White.copy(alpha = .7f)
       )
     }
   }
-
 
   AlertSettings(
     confirmButton = {
@@ -143,6 +157,21 @@ fun BackupRestoreData(
       }
     }
   )
+}
+
+
+private fun openFolderCsv(settingsViewModel: SettingsViewModel, ctx: Context) {
+  val file = settingsViewModel.filePath
+
+  //open new file
+  val newIntent = Intent(Intent.ACTION_VIEW).apply {
+    setDataAndType(
+      Uri.parse(file?.path),
+      "*/*"
+    )
+    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+  }
+  ctx.startActivity(newIntent)
 }
 
 @Composable
@@ -189,6 +218,7 @@ fun AlertSettings(
 @Composable
 private fun Content(
   mainViewModel: MainViewModel = hiltViewModel(),
+  settingsViewModel: SettingsViewModel = hiltViewModel(),
 ) {
   val context = LocalContext.current
   val list = listOf(
@@ -208,9 +238,15 @@ private fun Content(
     modifier = Modifier.fillMaxWidth(),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
+    //support
     TextButton(onClick = { supportCard = !supportCard },
     ) {
       Text(text = stringResource(R.string.want_to_support), textDecoration = TextDecoration.Underline)
+    }
+    //how to use
+    TextButton(onClick = { settingsViewModel.howToUse = !settingsViewModel.howToUse },
+    ) {
+      Text(text = stringResource(R.string.how_to_use), textDecoration = TextDecoration.Underline)
     }
     val ctx = LocalContext.current
     Card(modifier = modifierSupportCard.clickable { supportCard = !supportCard }) {

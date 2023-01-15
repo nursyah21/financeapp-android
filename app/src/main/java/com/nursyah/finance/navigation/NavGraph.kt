@@ -23,7 +23,7 @@ fun NavGraph(
   val ctx = LocalContext.current
   AnimatedNavHost(navController = navController, startDestination = ctx.getString(SCREEN_HOME)){
     composable(ctx.getString(SCREEN_HOME)) { HomeScreen() }
-    composable(ctx.getString(SCREEN_STATS)) { StatsScreen() }
+    composable(ctx.getString(SCREEN_STATS)) { StatsScreen(navHostController = navController) }
     composable(ctx.getString(SCREEN_SETTINGS)) { SettingsScreen(navHostController = navController) }
     composable(ctx.getString(SCREEN_LICENSE)) { LicenseScreen(navHostController = navController) }
   }

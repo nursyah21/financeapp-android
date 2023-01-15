@@ -19,6 +19,43 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object Utils {
+  private const val SHARED_PREFERENCES = "sharedPreferences"
+  const val SHARED_CHART_INCOME = "chartIncome"
+  const val SHARED_CHART_SPENDING = "chartSpending"
+  private val calendar = Calendar.getInstance()
+
+  /**
+   * Returns 2022-12 to December 2022
+   */
+  fun convertDateString(ctx:Context, s:String): String{
+    val listMonth = listOf(
+      R.string.january, R.string.february, R.string.march,R.string.april, R.string.may, R.string.june,
+      R.string.july, R.string.august, R.string.september, R.string.october, R.string.november, R.string.december)
+
+    val year = s.split("-")[0]
+    val month = ctx.getString(listMonth[s.split("-")[1].toInt() - 1])
+
+    return "$month $year"
+  }
+  fun getThisYear():String {
+    return calendar.get(Calendar.YEAR).toString()
+  }
+  fun getThisMonth():String {
+    return "%02d".format(calendar.get(Calendar.MONTH)+1)
+  }
+
+  fun saveSharedString(ctx: Context, value: String, name: String){
+   ctx.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE).edit()
+     .apply {
+       putString(name, value)
+     }.apply()
+  }
+
+  fun getSharedString(ctx: Context, name: String, default: String = ""):String {
+    return ctx.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE)
+      .getString(name, default) ?: ""
+  }
+
   @SuppressLint("SimpleDateFormat")
   fun getDateToday(pattern: String): String {
     return SimpleDateFormat(pattern).format(Calendar.getInstance().time)
@@ -79,7 +116,9 @@ object Utils {
       if(index % 3 == 0)res += ","
       res += c
     }
-    return prefix + res.reversed().dropLast(1)
+    res = prefix + res.reversed().dropLast(1)
+
+    return res
   }
 
 
@@ -129,8 +168,10 @@ object Utils {
 
     notificationManager.notify(0, builder.build())
   }
-
+  private var toast:Toast? = null
   fun showToast(context:Context, text: String){
-    Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+    toast?.cancel()
+    toast = Toast.makeText(context, text, Toast.LENGTH_SHORT)
+    toast?.show()
   }
 }

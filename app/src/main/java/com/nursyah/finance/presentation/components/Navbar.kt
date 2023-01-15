@@ -38,6 +38,7 @@ fun Navbar(
           if(navController.currentDestination?.route != itemName) {
             navController.popBackStack()
             navController.navigate(itemName)
+
           }
         },
         label = { Text(text = itemName)},

@@ -19,6 +19,7 @@ fun KeyboardNumber(
     modifier= Modifier.fillMaxSize(),
     verticalArrangement = Arrangement.Bottom
   ) {
+
     //row1
     RowKeyboard(listOf("1", "2", "3"), onChange, value)
     //row2
@@ -26,7 +27,7 @@ fun KeyboardNumber(
     //row3
     RowKeyboard(listOf("7", "8", "9"), onChange, value)
     //row4
-    RowKeyboard(listOf("del","0","000"), onChange, value)
+    RowKeyboard(listOf("000","0","del"), onChange, value)
   }
 }
 

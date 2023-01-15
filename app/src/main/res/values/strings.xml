@@ -46,4 +46,42 @@
     <string name="data_not_valid">Data not valid</string>
     <string name="delete_data_success">Delete data success</string>
     <string name="privacy_policy" translatable="false">https://nursyah21.github.io/app/privacy_policy_finance</string>
+    <string name="year">year</string>
+    <string name="month">month</string>
+    <string name="week">week</string>
+    <string name="all_time">all time</string>
+    <string name="january">January</string>
+    <string name="february">February</string>
+    <string name="march">March</string>
+    <string name="april">April</string>
+    <string name="may">May</string>
+    <string name="june">June</string>
+    <string name="july">July</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="october">October</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
+    <string name="how_to_use">how to use</string>
+    <string name="close">close</string>
+    <string name="how_to_use_content">
+        Finance app, is a simple financial management application to manage your spending and income\n\n
+
+        on home screen\n
+        1. Balance, here you can write down the money you have now and what you have allocated for your shopping needs. You can enter the number 0 if your funds turn out to be negative\n
+        2. Income, every time you get income you record it here\n
+        3. Spending, every time you spend your money you record it here\n
+        4. Income dan Spending for the initial number you cannot enter an initial value of 0\n
+        5. You can see a summary of your total shopping today and your shopping list today, sequentially according your shopping time\n\n
+
+        on stats screen\n
+        1. Here you will see statistics on spending and income that can be displayed based on all time, year, month, week\n
+        2. You can also see a summary of your total spending and expenses for the current month and the previous month\n
+        3. You can see all the history of spending and income here\n\n
+
+        on settings screen\n
+        1. Backup data, to backup all  existing data, the location of the stored data will be displayed on the screen. data stored in the form of csv\n
+        2. Restore data, to restore data that you have previously saved, the previous data will not be deleted, because the data is in the form of csv you can also edit the data\n
+        3. Delete data, to delete all data
+    </string>
 </resources>
