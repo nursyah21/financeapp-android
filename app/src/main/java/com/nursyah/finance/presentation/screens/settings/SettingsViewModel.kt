@@ -83,39 +83,49 @@ class SettingsViewModel @Inject constructor(
   @SuppressLint("SimpleDateFormat")
   private fun sendData(text: String){
 
-    val external = Environment.getExternalStoragePublicDirectory(
+    val filePath = Environment.getExternalStoragePublicDirectory(
       Environment.DIRECTORY_DOCUMENTS
     )
 
     val nameFile = "backup finance ${getDateToday(TIME_WITH_HOUR)
       .replace("_"," at ")}.csv"
-    val status = "${context.getString(R.string.backup_data_success)}\n${external.path}/$nameFile"
+    val status = "${context.getString(R.string.backup_data_success)}\n${filePath.path}/$nameFile"
 
     try {
-      val backupData = ContentValues().apply {
-        put(MediaStore.MediaColumns.DISPLAY_NAME, nameFile)
-        put(MediaStore.MediaColumns.MIME_TYPE, "*/*")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-          put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS)
+      try{
+        val backupData = ContentValues().apply {
+          put(MediaStore.MediaColumns.DISPLAY_NAME, nameFile)
+          put(MediaStore.MediaColumns.MIME_TYPE, "*/*")
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS)
+          }
+        }
+        val uri = try{
+          context.contentResolver.insert(
+            MediaStore.Files.getContentUri("external"),
+            backupData
+          )
+        }
+        catch (_:Exception){
+          context.contentResolver.insert(
+            MediaStore.Files.getContentUri("internal"),
+            backupData
+          )
+        }
+
+        with(context.contentResolver.openOutputStream(uri!!)) {
+          this?.write(text.toByteArray())
         }
       }
-      val uri = try{
-        context.contentResolver.insert(
-          MediaStore.Files.getContentUri("external"),
-          backupData
-        )
-      }catch (_:Exception){
-        context.contentResolver.insert(
-          MediaStore.Files.getContentUri("internal"),
-          backupData
-        )
+      catch (e:Exception){ //save data without use mediastore
+        println(e)
+        val file = File(filePath, nameFile)
+        file.setWritable(true)
+        file.writeText(text)
       }
-      with(context.contentResolver.openOutputStream(uri!!)) {
-        this?.write(text.toByteArray())
-      }
-      filePath = external
+      this.filePath = filePath
       Utils.showToast(context, status)
-      Utils.notification(context, status, file = external)
+      Utils.notification(context, status, file = filePath)
       statusBackupRestore = status
     }catch (e:Exception){
       Utils.showToast(context, context.getString(R.string.backup_data_failed))

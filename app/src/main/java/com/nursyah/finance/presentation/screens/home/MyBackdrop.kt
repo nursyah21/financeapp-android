@@ -205,9 +205,10 @@ private fun RowKeyboard(row: List<String>, onChange: (String) -> Unit, value: St
           when(it){
             "del" -> onChange(value.dropLast(1))
             "000" -> if(value.length < 12 && value.isNotEmpty()) onChange(value + it)
-            "0" -> if(value.isEmpty()) onChange(value + it)
+            "0" -> if(value.length < 12 && value.isNotEmpty()) onChange(value + it)
             else -> if(value.length < 12) onChange(value + it)
           }
+          println(value)
         }) {
         if (it == "del")
           Icon(painter = painterResource(R.drawable.ic_backspace), contentDescription = null)
