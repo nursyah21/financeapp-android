@@ -168,7 +168,7 @@ object Utils {
 
     notificationManager.notify(0, builder.build())
   }
-  var toast:Toast? = null
+  private var toast:Toast? = null
   fun showToast(context:Context, text: String){
     toast?.cancel()
     toast = Toast.makeText(context, text, Toast.LENGTH_SHORT)

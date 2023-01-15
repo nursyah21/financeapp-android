@@ -45,7 +45,6 @@
     <string name="all_time">sepanjang waktu</string>
     <string name="january">Januari</string>
     <string name="february">Februari</string>
-    <string name="March">Maret</string>
     <string name="april">April</string>
     <string name="may">Mei</string>
     <string name="june">Juni</string>
@@ -55,4 +54,27 @@
     <string name="october">Oktober</string>
     <string name="december">Desember</string>
     <string name="november">November</string>
+    <string name="how_to_use">cara penggunaan</string>
+    <string name="march">maret</string>
+    <string name="close">tutup</string>
+    <string name="how_to_use_content">
+        Finance app, adalah aplikasi manajemen keuangan sederhana untuk mengatur pengeluaran dan pemasukan mu\n\n
+
+        pada layar rumah\n
+        1. Dana, disini kamu bisa menuliskan uang yang kamu miliki sekarang dan yang kamu alokasikan untuk kebutuhan belanjamukamu bisa memasukkan angka 0 jika danamu ternyata bernilai negatif\n
+        2. Pemasukan, setiap saat kamu mendapatkan pemasukan kamu mencatat nya disini\n
+        3. Pengeluaran, setiap kali kamu membelanjakan uangmu kamu mencatat nya disini\n
+        4. Pemasukan dan Pengeluaran untuk angka awal kamu tidak bisa memasukkan nilai awal 0\n
+        5. Kamu dapat melihat rangkuman total belanja mu hari ini dan list belanjaanmu hari ini yang berurutan sesuai waktu belanjamu\n\n
+
+        pada layar statistik\n
+        1. Disini kamu akan melihat statistik pengeluaran dan pemasukkan yang bisa ditampilkan berdasarkan sepanjang waktu, tahun, bulan, minggu\n
+        2. Kamu juga bisa lihat rangkuman total belanja dan pengeluaranmu bulan hari ini maupun bulan sebelumnya\n
+        3. Kamu bisa melihat semua histori pengeluaran dan pemasukanmu disini\n\n
+
+        pada layar pengaturan\n
+        1. Simpan data, untuk menyimpan semua data yang ada data, letak data yang disimpan akan ditampilkan pada layar. data yang disimpan berbentuk csv\n
+        2. Memulihkan data, untuk mengembalikan data yang sudah kamu simpan sebelumnya, data sebelumnya tidak akan terhapus, karena data berbentuk csv kamu juga bisa mengedit data tersebut\n
+        3. Hapus data, untuk menghapus semua data
+    </string>
 </resources>

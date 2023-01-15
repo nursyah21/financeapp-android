@@ -70,7 +70,6 @@ private fun Content(
   val sizePx = with(LocalDensity.current){200.dp.toPx()}
   val anchors = mapOf(0f to 0, sizePx to 10)
 
-  /*TODO in new update create swipe function to close backdrop)*/
   Column(
     modifier= Modifier
       .fillMaxSize()

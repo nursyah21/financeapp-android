@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -173,7 +174,7 @@ fun DataColumn(
     exit = fadeOut()
   ) {
     LazyColumn{
-      items(data
+      items(data.reversed()
         .filterNot { it.category == "balanceSpending" || it.category == "balanceIncome" }
         .filter { it.date == LocalDate.now().toString()  }
       ){
@@ -197,7 +198,11 @@ fun DataColumn(
             horizontalArrangement = Arrangement.SpaceBetween
           ) {
             Text(text = value)
-            Icon(painter = painterResource(R.drawable.ic_delete), contentDescription = null)
+            Icon(
+              painter = painterResource(R.drawable.ic_delete),
+              contentDescription = null,
+              tint = Color.DarkGray
+            )
           }
           Divider()
         }

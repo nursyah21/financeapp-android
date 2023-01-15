@@ -37,6 +37,7 @@ class SettingsViewModel @Inject constructor(
   private val dataRepository: DataRepository,
   @ApplicationContext private val context: Context
 ): ViewModel() {
+  var howToUse by mutableStateOf(false)
 
   var alertDialog by mutableStateOf(false)
     private set

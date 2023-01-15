@@ -35,7 +35,9 @@ import com.nursyah.finance.presentation.components.MainViewModel
 fun SettingsScreen(
   navHostController: NavHostController,
   mainViewModel: MainViewModel = hiltViewModel(),
+  settingsViewModel: SettingsViewModel = hiltViewModel(),
 ){
+
   Surface(
     modifier = Modifier.fillMaxSize()
   ) {
@@ -79,6 +81,9 @@ fun SettingsScreen(
           mainViewModel.openLink(ctx.getString(R.string.privacy_policy))
         }
       )
+    }
+    HowToUse(visible = settingsViewModel.howToUse) {
+      settingsViewModel.howToUse = !settingsViewModel.howToUse
     }
   }
 
@@ -213,6 +218,7 @@ fun AlertSettings(
 @Composable
 private fun Content(
   mainViewModel: MainViewModel = hiltViewModel(),
+  settingsViewModel: SettingsViewModel = hiltViewModel(),
 ) {
   val context = LocalContext.current
   val list = listOf(
@@ -232,9 +238,15 @@ private fun Content(
     modifier = Modifier.fillMaxWidth(),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
+    //support
     TextButton(onClick = { supportCard = !supportCard },
     ) {
       Text(text = stringResource(R.string.want_to_support), textDecoration = TextDecoration.Underline)
+    }
+    //how to use
+    TextButton(onClick = { settingsViewModel.howToUse = !settingsViewModel.howToUse },
+    ) {
+      Text(text = stringResource(R.string.how_to_use), textDecoration = TextDecoration.Underline)
     }
     val ctx = LocalContext.current
     Card(modifier = modifierSupportCard.clickable { supportCard = !supportCard }) {
