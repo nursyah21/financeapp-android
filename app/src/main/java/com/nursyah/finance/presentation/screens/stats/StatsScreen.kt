@@ -2,12 +2,33 @@ package com.nursyah.finance.presentation.screens.stats
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Card
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -88,7 +109,6 @@ private fun Summary(data: List<Data>) {
       var accSpending = 0L
       var accIncome = 0L
       data.reversed().filter { itData -> itData.date.contains("$it-.*".toRegex()) }.forEach {itAcc->
-        println(itAcc.value)
         if(itAcc.category == "Spending")accSpending += itAcc.value
         if(itAcc.category == "Income") accIncome += itAcc.value
       }
@@ -200,7 +220,6 @@ private fun DataColumn(
   }
 }
 
-
 @Composable
 private fun Chart(spending: List<Data>, income: List<Data>, viewModel: StatsViewModel, navHostController: NavHostController) {
   //Spending Chart
@@ -212,8 +231,9 @@ private fun Chart(spending: List<Data>, income: List<Data>, viewModel: StatsView
     YEAR -> spending.filter { it.date.contains("${Utils.getThisYear()}-.*-.*".toRegex()) }
     MONTH -> spending.filter { it.date.contains("${Utils.getThisYear()}-${Utils.getThisMonth()}-.*".toRegex()) }
     WEEK -> {
-      val tempData = spending.filter { it.date.contains("${Utils.getThisYear()}-${Utils.getThisMonth()}-.*".toRegex()) }
-      tempData.subList(0, if(tempData.size >= 7) 7 else tempData.size)
+      if(spending.size > 7){
+        spending.subList(spending.size - 7, spending.size).filter { it.date.contains("${Utils.getThisYear()}-${Utils.getThisMonth()}-.*".toRegex()) }
+      }else spending
     }
     else -> spending
   }
@@ -223,8 +243,9 @@ private fun Chart(spending: List<Data>, income: List<Data>, viewModel: StatsView
     YEAR -> income.filter { it.date.contains("${Utils.getThisYear()}-.*-.*".toRegex()) }
     MONTH -> income.filter { it.date.contains("${Utils.getThisYear()}-${Utils.getThisMonth()}-.*".toRegex()) }
     WEEK -> {
-      val tempData = income.filter { it.date.contains("${Utils.getThisYear()}-${Utils.getThisMonth()}-.*".toRegex()) }
-      tempData.subList(0, if(tempData.size >= 7) 7 else tempData.size)
+      if(income.size > 7){
+        income.subList(income.size - 7, income.size).filter { it.date.contains("${Utils.getThisYear()}-${Utils.getThisMonth()}-.*".toRegex()) }
+      }else income
     }
     else -> income
   }
@@ -273,8 +294,8 @@ private fun StateChart(
 ) {
   val ctx = LocalContext.current
 
-  viewModel.chartSpending = Utils.getSharedString(ctx, Utils.SHARED_CHART_SPENDING, ALL_TIME)
-  viewModel.chartIncome = Utils.getSharedString(ctx, Utils.SHARED_CHART_INCOME, ALL_TIME)
+//  viewModel.chartSpending = Utils.getSharedString(ctx, Utils.SHARED_CHART_SPENDING, ALL_TIME)
+//  viewModel.chartIncome = Utils.getSharedString(ctx, Utils.SHARED_CHART_INCOME, ALL_TIME)
 
 
   LazyRow(

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.nursyah.finance.R
 import com.nursyah.finance.core.Utils
 import com.nursyah.finance.db.model.Data
+import com.nursyah.finance.presentation.screens.stats.StatsViewModel.Category.ALL_TIME
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.LocalDate
@@ -20,10 +21,10 @@ import javax.inject.Inject
 class StatsViewModel @Inject constructor(
   @ApplicationContext private val context: Context
 ): ViewModel() {
-
-  var chartSpending by mutableStateOf("")
-  var chartIncome by  mutableStateOf("")
-
+  private val spendingShared = Utils.getSharedString(context, Utils.SHARED_CHART_SPENDING, ALL_TIME)
+  private val incomeShared = Utils.getSharedString(context, Utils.SHARED_CHART_INCOME, ALL_TIME)
+  var chartSpending by mutableStateOf(spendingShared)
+  var chartIncome by  mutableStateOf(incomeShared)
 
   var stateDataAlert by mutableStateOf(false)
     private set

@@ -118,7 +118,6 @@ class SettingsViewModel @Inject constructor(
         }
       }
       catch (e:Exception){ //save data without use mediastore
-        println(e)
         val file = File(filePath, nameFile)
         file.setWritable(true)
         file.writeText(text)
@@ -129,7 +128,6 @@ class SettingsViewModel @Inject constructor(
       statusBackupRestore = status
     }catch (e:Exception){
       Utils.showToast(context, context.getString(R.string.backup_data_failed))
-      println(e)
     }
   }
 
@@ -172,7 +170,6 @@ class SettingsViewModel @Inject constructor(
       return textList.drop(1)
     }catch (e:Exception){
       Utils.showToast(context,context.getString(R.string.restore_data_failed))
-      println("Error: ${e.stackTrace}")
     }
     return emptyList()
   }
