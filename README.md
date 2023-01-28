@@ -4,7 +4,7 @@
   <img src="screenshots/icon.png" width="140px" />
 </p> <br>
 
-Download [finance_1.2-release.apk](https://github.com/nursyah21/financeapp-android/releases/download/version_1.2/finance_1.2-release.apk)
+Download [finance_1.3-release.apk](https://github.com/nursyah21/financeapp-android/releases/download/version_1.3/finance_1.3-release.apk)
 
 the sign-in key app from github and on playstore is different
 
