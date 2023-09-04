@@ -39,7 +39,7 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
-        signingConfig signingConfigs.release
+
     }
 
     buildTypes {
@@ -48,7 +48,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            signingConfig signingConfigs.release
+
         }
         benchmark {
             matchingFallbacks = ['release']
