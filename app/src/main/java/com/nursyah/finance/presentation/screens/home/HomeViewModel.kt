@@ -28,7 +28,6 @@ class HomeViewModel: ViewModel(){
     private set
   fun changeAlertState() { alertState = !alertState }
 
-
   var alertStateDeleteId by mutableStateOf<Long>(0)
     private set
 
