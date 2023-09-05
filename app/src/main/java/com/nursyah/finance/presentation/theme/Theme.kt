@@ -2,13 +2,15 @@ package com.nursyah.finance.presentation.theme
 
 import android.app.Activity
 import android.os.Build
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Typography
-import androidx.compose.material.darkColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,44 +30,97 @@ val Dark = Color(0xff0C161E)
 val AlmostBlack = Color(0xff1F272D)
 
 val modifierScreen = Modifier.padding(10.dp)
-val cardModifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp))
+val cardModifier = Modifier
+    .fillMaxWidth()
+    .clip(RoundedCornerShape(10.dp))
 
-val ColorPalette = darkColors(
-  primary = Color.White,
-  surface = BlueGray,
-  onSurface = Color.White,
-  background = BlueGray,
-  onBackground = Color.White,
+private val LightColors = lightColorScheme(
+    primary = md_theme_light_primary,
+    onPrimary = md_theme_light_onPrimary,
+    primaryContainer = md_theme_light_primaryContainer,
+    onPrimaryContainer = md_theme_light_onPrimaryContainer,
+    secondary = md_theme_light_secondary,
+    onSecondary = md_theme_light_onSecondary,
+    secondaryContainer = md_theme_light_secondaryContainer,
+    onSecondaryContainer = md_theme_light_onSecondaryContainer,
+    tertiary = md_theme_light_tertiary,
+    onTertiary = md_theme_light_onTertiary,
+    tertiaryContainer = md_theme_light_tertiaryContainer,
+    onTertiaryContainer = md_theme_light_onTertiaryContainer,
+    error = md_theme_light_error,
+    errorContainer = md_theme_light_errorContainer,
+    onError = md_theme_light_onError,
+    onErrorContainer = md_theme_light_onErrorContainer,
+    background = md_theme_light_background,
+    onBackground = md_theme_light_onBackground,
+    surface = md_theme_light_surface,
+    onSurface = md_theme_light_onSurface,
+    surfaceVariant = md_theme_light_surfaceVariant,
+    onSurfaceVariant = md_theme_light_onSurfaceVariant,
+    outline = md_theme_light_outline,
+    inverseOnSurface = md_theme_light_inverseOnSurface,
+    inverseSurface = md_theme_light_inverseSurface,
+    inversePrimary = md_theme_light_inversePrimary,
+    surfaceTint = md_theme_light_surfaceTint,
+    outlineVariant = md_theme_light_outlineVariant,
+    scrim = md_theme_light_scrim,
+)
+
+
+private val DarkColors = darkColorScheme(
+    primary = md_theme_dark_primary,
+    onPrimary = md_theme_dark_onPrimary,
+    primaryContainer = md_theme_dark_primaryContainer,
+    onPrimaryContainer = md_theme_dark_onPrimaryContainer,
+    secondary = md_theme_dark_secondary,
+    onSecondary = md_theme_dark_onSecondary,
+    secondaryContainer = md_theme_dark_secondaryContainer,
+    onSecondaryContainer = md_theme_dark_onSecondaryContainer,
+    tertiary = md_theme_dark_tertiary,
+    onTertiary = md_theme_dark_onTertiary,
+    tertiaryContainer = md_theme_dark_tertiaryContainer,
+    onTertiaryContainer = md_theme_dark_onTertiaryContainer,
+    error = md_theme_dark_error,
+    errorContainer = md_theme_dark_errorContainer,
+    onError = md_theme_dark_onError,
+    onErrorContainer = md_theme_dark_onErrorContainer,
+    background = md_theme_dark_background,
+    onBackground = md_theme_dark_onBackground,
+    surface = md_theme_dark_surface,
+    onSurface = md_theme_dark_onSurface,
+    surfaceVariant = md_theme_dark_surfaceVariant,
+    onSurfaceVariant = md_theme_dark_onSurfaceVariant,
+    outline = md_theme_dark_outline,
+    inverseOnSurface = md_theme_dark_inverseOnSurface,
+    inverseSurface = md_theme_dark_inverseSurface,
+    inversePrimary = md_theme_dark_inversePrimary,
+    surfaceTint = md_theme_dark_surfaceTint,
+    outlineVariant = md_theme_dark_outlineVariant,
+    scrim = md_theme_dark_scrim,
 )
 
 // Set of Material typography styles to start with
 val typography = Typography(
-  body1 = TextStyle(
-    fontFamily = FontFamily.Default,
-    fontWeight = FontWeight.Normal,
-    fontSize = 16.sp
-  )
-  /* Other default text styles to override
-    button = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.W500,
-        fontSize = 14.sp
-    ),
-    caption = TextStyle(
+    bodySmall = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp
+        fontSize = 16.sp
     )
-    */
 )
 
 @Composable
-fun FinanceTheme(content: @Composable () -> Unit){
-  val view = LocalView.current
-  if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-    (view.context as Activity).window.statusBarColor = BlueGray.toArgb()
-    (view.context as Activity).window.navigationBarColor = BlueGray.toArgb()
-  }
+fun FinanceTheme(
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable() () -> Unit
+) {
+    val colors = if (!useDarkTheme) {
+        LightColors
+    } else {
+        DarkColors
+    }
 
-  MaterialTheme(colors = ColorPalette, content = content, typography = typography)
+    MaterialTheme(
+        colorScheme = colors,
+        content = content
+    )
 }
