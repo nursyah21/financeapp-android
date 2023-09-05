@@ -2,6 +2,11 @@ package com.nursyah.finance.presentation.screens.license
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,7 +30,7 @@ fun LicenseScreen(
       val ctx = LocalContext.current
       Text(
         text = stringResource(R.string.open_source_license),
-        fontSize = MaterialTheme.typography.h5.fontSize,
+        fontSize = MaterialTheme.typography.headlineSmall.fontSize,
         modifier = Modifier.padding(5.dp)
       )
       IconButton(onClick = {

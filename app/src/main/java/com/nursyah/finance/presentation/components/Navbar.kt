@@ -1,15 +1,14 @@
 package com.nursyah.finance.presentation.components
 
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import com.nursyah.finance.R
-
 
 enum class ItemNav(
   val itemName: Int,
@@ -28,10 +27,10 @@ fun Navbar(
   navController: NavHostController,
 ){
   val ctx = LocalContext.current
-  BottomNavigation {
+  NavigationBar {
     ItemNav.values().forEach {
       val itemName = ctx.getString(it.itemName)
-      BottomNavigationItem(
+      NavigationBarItem(
         selected = itemName == value,
         onClick = {
           onClick(itemName)
