@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
 import com.nursyah.finance.R
-import com.nursyah.finance.core.Constants.SCREEN_SETTINGS
 
 @Composable
 fun LicenseScreen(
@@ -34,8 +33,7 @@ fun LicenseScreen(
         modifier = Modifier.padding(5.dp)
       )
       IconButton(onClick = {
-        navHostController.popBackStack()
-        navHostController.navigate(ctx.getString(SCREEN_SETTINGS))
+        navHostController.navigateUp()
       }) {
         Icon(painter = painterResource(R.drawable.ic_close), contentDescription = null)
       }

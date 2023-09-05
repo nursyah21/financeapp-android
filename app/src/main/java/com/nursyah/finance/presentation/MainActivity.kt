@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.nursyah.finance.core.Constants.SCREEN_HOME
 import com.nursyah.finance.navigation.NavGraph
+import com.nursyah.finance.navigation.SCREEN_HOME
 import com.nursyah.finance.presentation.components.Navbar
 import com.nursyah.finance.presentation.theme.FinanceTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun App(navController: NavHostController) {
     val ctx = LocalContext.current
-    var navbarSelected by rememberSaveable { mutableStateOf(ctx.getString(SCREEN_HOME)) }
+    var navbarSelected by rememberSaveable { mutableStateOf(SCREEN_HOME) }
 
     Scaffold(
         bottomBar = {
