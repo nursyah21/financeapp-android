@@ -21,14 +21,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -272,7 +272,7 @@ private fun ChartContainer(
       Row {
         Text(
           text = if(s == SPENDING) stringResource(R.string.spending) else stringResource(R.string.income),
-          fontSize = MaterialTheme.typography.h6.fontSize,
+          fontSize = MaterialTheme.typography.headlineSmall.fontSize,
           modifier = Modifier.padding(8.dp)
         )
         StateChart(s, viewModel, navHostController)

@@ -8,8 +8,4 @@ object Constants {
   const val SETTINGS_STATE_DELETE = "delete"
   const val SETTINGS_STATE_RESTORE = "restore"
   const val SETTINGS_STATE_BACKUP = "backup"
-  const val SCREEN_HOME = R.string.home
-  const val SCREEN_STATS = R.string.stats
-  const val SCREEN_SETTINGS = R.string.settings
-  const val SCREEN_LICENSE = R.string.license
 }
