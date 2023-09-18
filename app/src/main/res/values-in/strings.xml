@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="about">aplikasi sederhana untuk mengatur keuanganmu dengan tema gelap</string>
+    <string name="about">aplikasi sederhana untuk mengatur keuanganmu</string>
     <string name="yes">ya</string>
     <string name="are_you_sure_to_delete">Kamu yakin untuk menghapus</string>
     <string name="today">Hari ini</string>

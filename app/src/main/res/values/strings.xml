@@ -2,7 +2,7 @@
     <string name="app_name" translatable="false">Finance</string>
     <string name="title_activity_splash" translatable="false">SplashActivity</string>
     <string name="database_name" translatable="false">database</string>
-    <string name="about">a simple app to manage your finances with a dark theme</string>
+    <string name="about">a simple app to manage your finances</string>
     <string name="github_url" translatable="false">https://github.com/nursyah21/financeapp-android</string>
     <string name="kofi_url" translatable="false">https://ko-fi.com/nursyahjaya</string>
     <string name="trakteer_url" translatable="false">https://trakteer.id/nursyah-jaya</string>

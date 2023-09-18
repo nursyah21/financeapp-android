@@ -137,7 +137,8 @@ class SettingsViewModel @Inject constructor(
             this.filePath = filePath
             Utils.showToast(context, status)
             Utils.notification(context, status, file = filePath)
-            statusBackupRestore = status
+            Utils.showToast(context, status)
+//            statusBackupRestore = status
         } catch (e: Exception) {
             Utils.showToast(context, context.getString(R.string.backup_data_failed))
         }
